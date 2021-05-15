@@ -1,15 +1,21 @@
 <template>
-	<v-card
-	class="mx-auto my-5"
-	color="#333"
-	>
-		<v-layout justify-center class="pa-2">
-			<v-img
-				aspect-ratio="0.90"
-				:src="filePath(piece.fullFilePath)"
-			></v-img>
-		</v-layout>
-		<v-card-text>
+	<v-card>
+		<v-img
+			aspect-ratio="1"
+			:src='filePath(piece.fullFilePath)'
+			@click="piece.isSelected = !piece.isSelected"
+		>
+			<v-badge
+			class="mt-1"
+			color="primary"
+			icon="mdi-check-bold"
+			overlap
+			inline
+			:hidden="!piece.isSelected"
+			@click="greet"
+			/>
+		</v-img>
+		<!-- <v-card-text>
 			<v-row>
 				<v-col cols="12">
 					<v-text-field 
@@ -85,22 +91,21 @@
 					</v-tooltip>
 				</v-col>
 			</v-row>
-		</v-card-text>
+		</v-card-text> -->
 	</v-card>
-
 </template>
 
 <script>
 import {getFilePath} from "@/utils/methods.js";
 import PieceModel from "@/modules/piece/models/PieceModel.js"
-import CustomDatePicker from "@/modules/commons/components/CustomDatePicker"
-import PriceInput from "@/modules/commons/components/PriceInput"
-import TagSelect from "@/modules/tag/components/TagSelect"
+// import CustomDatePicker from "@/modules/commons/components/CustomDatePicker"
+// import PriceInput from "@/modules/commons/components/PriceInput"
+// import TagSelect from "@/modules/tag/components/TagSelect"
 export default {
 	components: {
-		CustomDatePicker,
-		PriceInput,
-		TagSelect
+		// CustomDatePicker,
+		// PriceInput,
+		// TagSelect
 	},
 	props: ['piece', 'removeAfterSave'],
 	data() {
@@ -116,6 +121,9 @@ export default {
 		}
 	},
 	methods: {
+		greet () {
+			alert("teste")
+		},
 		async remove(pieceId){
 			this.removeLoading = true
 			await this.$store.dispatch("removePiece", {pieceId})
@@ -129,7 +137,7 @@ export default {
 		},
 		filePath(fullFilePath){
 			return getFilePath(fullFilePath)
-		},
+		}
 	}
 	
 };

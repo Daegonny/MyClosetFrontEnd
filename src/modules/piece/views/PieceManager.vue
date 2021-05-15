@@ -1,105 +1,6 @@
 <template>
-	<div class="pa-6">
-		<v-card class="px-3">
-			<v-card-title>Filtros</v-card-title>
-			<v-row class="mx-2">
-				<v-col md="3">
-					<v-text-field
-					clearable
-					v-model="queryFilter.name"
-					label="Nome da Peça"
-					hint="Pesquise pelo nome da peça!"
-					/>
-				</v-col>
-				<v-col md="5">
-					<tag-select 
-					:propSelected="queryFilter.tagNames"
-					@changed-tags="queryFilter.tagNames = $event"
-					>
-					</tag-select>
-				</v-col>
-				<v-col md="4">	
-					<v-radio-group
-					v-model="queryFilter.mustHaveAllTagNames"
-					>
-						<v-row>
-							<v-col md="6">
-								<v-radio
-								label="Deve conter uma das tags"
-								:value="false"
-								></v-radio>
-							</v-col>
-							<v-col md="6">
-								<v-radio
-								label="Deve conter todas as tags"
-								:value="true"
-								></v-radio>
-							</v-col>
-						</v-row>
-					</v-radio-group>
-				</v-col>
-			</v-row>
-			<v-row class="mx-2">
-				<v-col md="3">
-					<price-input
-					:propPriceValue="queryFilter.priceMin"
-					:label="'Valor maior que'"
-					:color="priceInputColor"
-					@changed-price-value="queryFilter.priceMin = $event"
-					/>
-				</v-col>
-				<v-col md="3">
-					<price-input
-					:propPriceValue="queryFilter.priceMax"
-					:label="'Valor menor que'"
-					:color="priceInputColor"
-					@changed-price-value="queryFilter.priceMax = $event"
-					/>
-				</v-col>
-				<v-col cols="3">
-					<custom-date-picker 
-					:propDate="queryFilter.purchaseDateMin" 
-					@changed-date-value="queryFilter.purchaseDateMin = $event"
-					:label="'Adquirido depois de'">
-					</custom-date-picker>
-				</v-col>
-				<v-col cols="3">
-					<custom-date-picker 
-					:propDate="queryFilter.purchaseDateMax" 
-					@changed-date-value="queryFilter.purchaseDateMax = $event"
-					:label="'Adquirido antes de'">
-					</custom-date-picker>
-				</v-col>
-			</v-row>
-		</v-card>
-		<v-card class="px-3 mt-5">
-			<v-row class="mx-2">
-			<v-col cols="2">
-				<v-card-title>Ações</v-card-title>
-			</v-col>
-			<v-col cols="4" offset-md="4">
-				<all-registers-crud-actions
-					:saveAllLoading="saveAllLoading"
-					:canSaveAll="canSaveAll"
-					:removeAllLoading="removeAllLoading"
-					:canRemoveAll="canRemoveAll"
-					@remove-all="removeAll"
-					@save-all="saveAll"
-				/>
-			</v-col>
-			<v-col md="2">
-				<v-btn 
-				small
-				class="mt-5"
-				depressed color="info"
-				@click="updateCurrentPage(1)">
-					Pesquisar <v-icon right dark> mdi-magnify </v-icon>
-				</v-btn>
-				</v-col>
-			</v-row>
-		</v-card>
-		<piece-card-wrapper :removeAfterSave="false" />
-		<v-card class="px-5 mt-5">
+	<div class="d-flex flex-column pa-2 h-100">
+		<v-card class="px-5">
 			<div class="text-center">
 				<v-pagination
 				v-model="currentPage"
@@ -108,50 +9,43 @@
 				></v-pagination>
 			</div>
 		</v-card>
+		<PieceCardWrapper class="mt-2 flex-grow-1" :removeAfterSave="false" />
+		<PieceActions class="my-2" @clearFilter="updateCurrentPage(1)" />
+		<PieceSearchModal @search="updateCurrentPage(1)" />
 	</div>
 </template>
 
 <script>
-import PieceCardWrapper from '@/modules/piece/components/PieceCardWrapper'
-import AllRegistersCrudActions from '@/modules/commons/components/AllRegistersCrudActions'
-import CustomDatePicker from "@/modules/commons/components/CustomDatePicker"
-import PriceInput from "@/modules/commons/components/PriceInput"
-import TagSelect from "@/modules/tag/components/TagSelect"
-import PieceModel from "@/modules/piece/models/PieceModel.js"		
+import PieceCardWrapper from '@/modules/piece/components/PieceCardWrapper.vue'
+import PieceActions from '@/modules/piece/components/PieceActions.vue'
+import PieceSearchModal from '@/modules/piece/components/PieceSearchModal.vue'
+// import AllRegistersCrudActions from '@/modules/commons/components/AllRegistersCrudActions'
+// import PieceFilter from "@/modules/piece/components/PieceFilter.vue"
+import PieceModel from '@/modules/piece/models/PieceModel.js'
 
 export default {
 	components: {
 		PieceCardWrapper,
-		AllRegistersCrudActions,
-		CustomDatePicker,
-		PriceInput,
-		TagSelect
+		PieceActions,
+		PieceSearchModal
+		// PieceFilter,
+		// AllRegistersCrudActions
 	},
 	data() {
- 
 		return {
-			priceInputColor: '#1e1e1e',
 			msg: '',
 			resultsPerPage: 12,
 			firstPageResult: 0, 
 			currentPage: 1,
 			images: [],
-			queryFilter: {
-				name: null,
-				purchaseDateMin: null,
-				purchaseDateMax: null,
-				priceMin: null,
-				priceMax: null,
-				tagNames: [],
-				mustHaveAllTagNames: false
-			},
 			removeAllLoading: false,
 			saveAllLoading: false
 		};
 	},
 
 	created: async function(){
-		await this.fetchPiecesFiltered(this.queryFilter, this.firstPageResult, this.resultsPerPage)
+		await this.fetchPiecesFiltered(this.getPieceFilter, 
+			this.firstPageResult, this.resultsPerPage)
 	},
 
 	computed: {
@@ -160,6 +54,9 @@ export default {
 		},
 		getPieces () {
 			return this.$store.getters.getPieces
+		},
+		getPieceFilter () {
+			return this.$store.getters.getPieceFilter
 		},
 		getPiecesFilteredRowCount () {
 			return this.$store.getters.getPiecesFilteredRowCount
@@ -182,7 +79,7 @@ export default {
 		async updateCurrentPage(value){
 			this.currentPage = value
 			this.firstPageResult = ((this.currentPage - 1) * this.resultsPerPage)
-			await this.fetchPiecesFiltered(this.queryFilter, this.firstPageResult, this.resultsPerPage)
+			await this.fetchPiecesFiltered(this.getPieceFilter, this.firstPageResult, this.resultsPerPage)
 		},
 
 		async fetchPiecesFiltered(queryFilter, start, quantity){

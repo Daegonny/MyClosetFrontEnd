@@ -27,24 +27,6 @@
 		<v-main>
 			<router-view></router-view>
 		</v-main>
-
-		<v-footer
-			dark
-			padless
-		>
-			<v-card
-			class="flex"
-			flat
-			tile
-			>
-			<v-card-text class="py-2 text-center">
-				{{ new Date().getFullYear() }} — <strong>MyCloset</strong>
-				<v-btn small fab @click="goToTop" class="ml-5 grey darken-4">
-						<v-icon>mdi-arrow-up-thick</v-icon>
-				</v-btn>
-			</v-card-text>
-			</v-card>
-		</v-footer>
 	</v-app>
 </template>
 
@@ -81,12 +63,6 @@ export default {
 				this.currentPath = value;
 				this.$router.push(value);
 			}
-		}
-	},
-	methods: {
-		goToTop (){
-			document.body.scrollTop = 0;
-			document.documentElement.scrollTop = 0;
 		}
 	}
 }

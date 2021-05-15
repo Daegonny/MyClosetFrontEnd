@@ -1,5 +1,5 @@
 import {http} from '@/utils/http.js'
-import {getPieceQueryFilterString} from "@/utils/methods.js"
+import PieceModel from '../models/PieceModel'
 
 export default {
 	saveFromFiles({commit}, files){
@@ -20,9 +20,9 @@ export default {
 
 	fetchPiecesFiltered({commit},{queryFilter, start, quantity}){
 		return new Promise((resolve, reject) => {
-			http.get(`/Piece/Filtered?start=${start}&quantity=${quantity}${getPieceQueryFilterString(queryFilter)}`)
+			http.get(`/Piece/Filtered?start=${start}&quantity=${quantity}${queryFilter.queryString()}`)
 				.then(response => {
-					commit('SET_PIECES', response.data)
+					commit('SET_PIECES', response.data.map(r => new PieceModel(r)))
 					resolve(response.data)
 				})
 				.catch(err => {
@@ -33,7 +33,7 @@ export default {
 
 	fetchPiecesFilteredRowCount({commit},{queryFilter}){
 		return new Promise((resolve, reject) => {
-			http.get(`/Piece/Filtered/RowCount?${getPieceQueryFilterString(queryFilter)}`)
+			http.get(`/Piece/Filtered/RowCount?${queryFilter.queryString()}`)
 				.then(response => {
 					commit('SET_PIECES_FILTERED_ROW_COUNT', response.data)
 					resolve(response.data)

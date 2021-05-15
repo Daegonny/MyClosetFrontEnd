@@ -2,17 +2,16 @@
 	<v-combobox
 	v-model="model"
 	multiple
-	hide-no-data
-	hide-selected
 	:search-input.sync="search"
 	clearable
-	chips
-	deletable-chips
+	allow-overflow
+	label="Tags"
 	item-text="name"
 	item-value="name"
-	label="Tags"
+	:delimiters="[',','.',' ']"
 	placeholder="Selecione tags relevantes"
-	></v-combobox>
+	hide-details
+	/>
 </template>
 
 <script>

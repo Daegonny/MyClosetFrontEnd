@@ -7,6 +7,7 @@ import {http} from '@/utils/http.js'
 import store from './store'
 import vuetify from './plugins/vuetify';
 import "./plugins/vuetify-money.js" 
+import "@/assets/style/main.scss"
 
 Vue.config.productionTip = false
 Vue.prototype.$http = http
