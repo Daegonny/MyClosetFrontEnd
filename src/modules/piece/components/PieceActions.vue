@@ -1,6 +1,6 @@
 <template>
-	<v-card class="px-1">
-		<div class="d-flex flex-row justify-space-between pa-1">
+	<v-card class="pa-2">
+		<div class="d-flex flex-row justify-space-between">
 			<div>
 				<v-btn
 				class="text-subtitle-2 text-none" 
@@ -8,8 +8,8 @@
 				block
 				outlined
 				depressed color="error"
-				:disabled="!canRemoveSelected" 
-				:loading="removeSelectedLoading"
+				:loading="isLoadingRemove"
+				:disabled="!canRemove" 
 				@click="removeSelected">
 					Remover <v-icon right dark> mdi-trash-can </v-icon>
 				</v-btn>
@@ -21,34 +21,21 @@
 				block
 				outlined
 				depressed color="success"
-				:disabled="!canTagSelected" 
-				:loading="tagSelectedLoading"
+				:loading="isLoadingTag"
+				:disabled="!canTag" 
 				@click="tagSelected">
 					Marcar <v-icon right dark> mdi-tag </v-icon>
 				</v-btn>
 			</div>
 			<div class="ml-1">
 				<v-btn 
-				v-if="!getIsFilterApplied"
 				class="text-subtitle-2 text-none" 
 				small
 				block
 				outlined
 				depressed color="info"
-				:disabled="!canSearch" 
-				@click="openSearchModal">
-					Filtrar <v-icon right dark> mdi-filter </v-icon>
-				</v-btn>
-				<v-btn 
-				v-if="getIsFilterApplied"
-				class="text-subtitle-2 text-none" 
-				small
-				block
-				outlined
-				depressed color="info"
-				:disabled="!canSearch" 
-				@click="clearFilter">
-					Limpar <v-icon right dark> mdi-filter-off </v-icon>
+				:disabled="!canEdit" >
+					Editar <v-icon right dark> mdi-pencil </v-icon>
 				</v-btn>
 			</div>
 		</div>
@@ -56,40 +43,40 @@
 </template>
 
 <script>
-import PieceFilterModel from "@/modules/piece/models/PieceFilterModel"
 export default {
 	data() {
 		return {
-			canRemoveSelected: true,
-			removeSelectedLoading: false,
-			canTagSelected: true, 
-			tagSelectedLoading: false,
-			canSearch: true,
+			isLoadingRemove: false,
+			isLoadingTag: false
 		};
 	},
 	computed: {
 		getSelected() {
 			return this.$store.getters.getSelectedPieces
 		},
-		getIsFilterApplied() {
-			return this.$store.getters.getIsFilterApplied
+		isLoading() {
+			return this.isLoadingRemove || this.isLoadingTag
+		},
+		canEdit() {
+			return this.getSelected.length == 1 && !this.isLoading
+		},
+		canTag() {
+			return this.getSelected.length > 0 && !this.isLoading
+		},
+		canRemove() {
+			return this.getSelected.length > 0 && !this.isLoading
 		}
 	},
 	methods: {
-		removeSelected () {
-			// console.log('removed', this.getSelected)
+		async removeSelected () {
+			this.isLoadingRemove = true
+			await this.$store.dispatch("removePieces", this.getSelected.map(p => p.id))
+			this.isLoadingRemove = false;
 		},
 		tagSelected () {
-			// console.log('removed', this.getSelected)
+			this.isLoadingTag = true
+			setTimeout(() => {  this.isLoadingTag = false; }, 2000);
 		},
-		clearFilter() {
-			this.$store.commit("SET_IS_FILTER_APPLIED", false)
-			this.$store.commit("SET_PIECE_FILTER", new PieceFilterModel())
-			this.$emit("clearFilter")
-		},
-		openSearchModal() {
-			this.$store.commit("SET_SHOW_PIECE_SEARCH_MODAL", true)
-		}
 	}
 };
 </script>

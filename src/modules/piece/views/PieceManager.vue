@@ -1,45 +1,40 @@
 <template>
 	<div class="d-flex flex-column pa-2 h-100">
-		<v-card class="px-5">
-			<div class="text-center">
-				<v-pagination
-				v-model="currentPage"
-				:length="pages"
-				@input="updateCurrentPage"
-				></v-pagination>
-			</div>
+		<v-card class="d-flex flex-row justify-space-between align-center pa-2">
+			<Pagination
+				:current="currentPage" 
+				:total="pages" 
+				@newPage="updateCurrentPage" 
+			/>
+			<PieceFilterAction @clearFilter="updateCurrentPage(1)" />
 		</v-card>
 		<PieceCardWrapper class="mt-2 flex-grow-1" :removeAfterSave="false" />
 		<PieceActions class="my-2" @clearFilter="updateCurrentPage(1)" />
-		<PieceSearchModal @search="updateCurrentPage(1)" />
+		<PieceFilterModal @search="updateCurrentPage(1)" />
 	</div>
 </template>
 
 <script>
 import PieceCardWrapper from '@/modules/piece/components/PieceCardWrapper.vue'
 import PieceActions from '@/modules/piece/components/PieceActions.vue'
-import PieceSearchModal from '@/modules/piece/components/PieceSearchModal.vue'
-// import AllRegistersCrudActions from '@/modules/commons/components/AllRegistersCrudActions'
-// import PieceFilter from "@/modules/piece/components/PieceFilter.vue"
-import PieceModel from '@/modules/piece/models/PieceModel.js'
+import PieceFilterModal from '@/modules/piece/components/PieceFilterModal.vue'
+import PieceFilterAction from '@/modules/piece/components/PieceFilterAction.vue'
+import Pagination from '@/modules/commons/components/Pagination.vue'
 
 export default {
 	components: {
 		PieceCardWrapper,
+		Pagination,
 		PieceActions,
-		PieceSearchModal
-		// PieceFilter,
-		// AllRegistersCrudActions
+		PieceFilterModal,
+		PieceFilterAction,
 	},
 	data() {
 		return {
-			msg: '',
 			resultsPerPage: 12,
 			firstPageResult: 0, 
 			currentPage: 1,
 			images: [],
-			removeAllLoading: false,
-			saveAllLoading: false
 		};
 	},
 
@@ -61,18 +56,6 @@ export default {
 		getPiecesFilteredRowCount () {
 			return this.$store.getters.getPiecesFilteredRowCount
 		},
-		getTags () {
-			return this.$store.getters.getTags
-		},
-		isWaitingAction: function(){
-			return this.removeAllLoading || this.saveAllLoading
-		},
-		canRemoveAll: function() {
-			return this.getPieces.length > 0 && !this.isWaitingAction
-		},
-		canSaveAll: function() {
-			return this.getPieces.length > 0 && !this.isWaitingAction
-		}
 	},
 
 	methods: {
@@ -81,23 +64,10 @@ export default {
 			this.firstPageResult = ((this.currentPage - 1) * this.resultsPerPage)
 			await this.fetchPiecesFiltered(this.getPieceFilter, this.firstPageResult, this.resultsPerPage)
 		},
-
 		async fetchPiecesFiltered(queryFilter, start, quantity){
 			await this.$store.dispatch("fetchPiecesFiltered", {queryFilter, start, quantity});
 			await this.$store.dispatch("fetchPiecesFilteredRowCount", {queryFilter});
 		},
-
-		async removeAll(){
-			this.removeAllLoading = true
-			await this.$store.dispatch("removePieces", this.getPieces.map(p => p.id))
-			this.removeAllLoading = false	
-		},
-
-		async saveAll(){
-			this.saveAllLoading = true
-			await this.$store.dispatch("savePieces", this.getPieces.map(p => new PieceModel(p)))
-			this.saveAllLoading = false
-		}
 	}
 };
 </script>

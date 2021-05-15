@@ -136,7 +136,7 @@ export default {
 	},
 	computed: {
 		dialog () {
-			return this.$store.getters.getShowPieceSearchModal
+			return this.$store.getters.getShowPieceFilterModal
 		},
 		getIsFilterApplied() {
 			return this.$store.getters.getIsFilterApplied

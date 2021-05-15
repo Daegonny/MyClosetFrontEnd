@@ -78,11 +78,13 @@ export default {
 		});
 	},
 
-	removePieces({commit}, pieceIds){
+	removePieces({commit, state}, pieceIds){
 		return new Promise((resolve, reject) => {
 			http.delete('/Piece/Multiple', {data: pieceIds})
 				.then(response => {
-					commit('SET_PIECES', [])
+					const newPieces = state.pieces
+					newPieces.removeIf( i => pieceIds.includes(i.id));
+					commit('SET_PIECES', newPieces)
 					resolve(response.data)
 				})
 				.catch(err => {

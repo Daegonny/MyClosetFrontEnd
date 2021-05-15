@@ -8,7 +8,8 @@ export default {
 		pieces: [],
 		piecesFilteredRowCount: 0,
 		pieceFilter: new PieceFilterModel(),
-		showPieceSearchModal: false,
+		showPieceFilterModal: false,
+		showPieceEditModal: false,
 		isFilterApplied: false
 	}),
 	getters,
