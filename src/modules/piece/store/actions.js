@@ -44,38 +44,58 @@ export default {
 		})
 	},
 
-	removePiece({commit, state}, {pieceId}){
-		return new Promise((resolve, reject) => {
-			http.delete(`/Piece/${pieceId}`)
-				.then(response => {
-					const newPieces = state.pieces
-					newPieces.removeIf( i => i.id == pieceId);
-					commit('SET_PIECES', newPieces)
-					resolve(response.data)
-				})
-				.catch(err => {
-					reject(err)
-				})
-		});
+	// removePiece({commit, state}, {pieceId}){
+	// 	return new Promise((resolve, reject) => {
+	// 		http.delete(`/Piece/${pieceId}`)
+	// 			.then(response => {
+	// 				const newPieces = state.pieces
+	// 				newPieces.removeIf( i => i.id == pieceId);
+	// 				commit('SET_PIECES', newPieces)
+	// 				commit('REMOVE_SELECTED_PIECE_INDEX', pieceId)
+					
+	// 				resolve(response.data)
+
+	// 			})
+	// 			.catch(err => {
+	// 				reject(err)
+	// 			})
+	// 	});
+	// },
+
+	removeCurrentPiece({commit, state}){
+		const currentPiece = state.currentPiece
+		commit("ITERATE_SELECTED_PIECE_INDEX", 1)
+		state.selectedPieces.removeIf(s => s.id == currentPiece.id)
+		state.pieces.removeIf(p => p.id == currentPiece.id)
+		if(state.selectedPieces.length == 0)
+			commit("SET_SHOW_PIECE_EDIT_MODAL", false)		
+
+		// return new Promise((resolve, reject) => {
+		// 	http.delete(`/Piece/${pieceId}`)
+		// 		.then(response => {
+		// 			const newPieces = state.pieces
+		// 			newPieces.removeIf( i => i.id == pieceId);
+		// 			commit('SET_PIECES', newPieces)
+		// 			commit('REMOVE_SELECTED_PIECE_INDEX', pieceId)
+					
+		// 			resolve(response.data)
+
+		// 		})
+		// 		.catch(err => {
+		// 			reject(err)
+		// 		})
+		// });
 	},
 
-	savePiece({commit, state}, {pieceModel, removeAfterSave}){
-		return new Promise((resolve, reject) => {
-			http.put(`/Piece`, pieceModel)
-				.then(response => {
-					
-					if(removeAfterSave){
-						const newPieces = state.pieces
-						newPieces.removeIf( i => i.id == pieceModel.id)
-						commit('SET_PIECES', newPieces)
-					}
-					
-					resolve(response.data)
-				})
-				.catch(err => {
-					reject(err)
-				})
-		});
+	saveCurrentPiece({state}){
+		console.log(state.currentPiece)
+		http.put(`/Piece`, state.currentPiece)
+			.then(response => {
+				console.info(response)
+			})
+			.catch(err => {
+				console.error(err)
+			})
 	},
 
 	removePieces({commit, state}, pieceIds){
