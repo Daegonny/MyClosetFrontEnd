@@ -2,8 +2,8 @@
 	<v-card v-if="getPieces.length > 0" class="px-3">
 		<v-row justify="start">
 			<v-col cols="4" class="pa-1"
-				v-for="piece in getPieces" :key="piece.id">
-					<piece-card :piece="piece" :removeAfterSave="removeAfterSave"/>	
+				v-for="(piece, index) in getPieces" :key="piece.id">
+					<piece-card :index="index" :piece="piece" :removeAfterSave="removeAfterSave"/>	
 			</v-col>
 		</v-row>
 	</v-card>

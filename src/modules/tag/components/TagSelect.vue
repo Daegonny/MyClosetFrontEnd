@@ -6,11 +6,10 @@
 	clearable
 	allow-overflow
 	label="Tags"
-	item-text="name"
-	item-value="name"
 	:delimiters="[',','.',' ']"
 	placeholder="Selecione tags relevantes"
 	hide-details
+	:return-object="false"
 	/>
 </template>
 
@@ -24,7 +23,8 @@ export default {
 		}
 	},
 	created(){
-		this.model = this.propSelected ? [...this.propSelected.map(p => p.name)] : []
+		console.log(this.propSelected)
+		this.model = this.propSelected
 		this.$emit('changed-tags', this.tags)
 	},
 	computed : {

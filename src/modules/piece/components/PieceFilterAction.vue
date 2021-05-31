@@ -7,8 +7,8 @@
 		block
 		outlined
 		depressed color="info"
-		:disabled="!canSearch" 
-		@click="openSearchModal">
+		:disabled="!canFilter" 
+		@click="openFilterModal">
 			Filtrar <v-icon right dark> mdi-filter </v-icon>
 		</v-btn>
 		<v-btn 
@@ -18,7 +18,7 @@
 		block
 		outlined
 		depressed color="info"
-		:disabled="!canSearch" 
+		:disabled="!canFilter" 
 		@click="clearFilter">
 			Limpar Filtro <v-icon right dark> mdi-filter-off </v-icon>
 		</v-btn>
@@ -30,7 +30,7 @@ import PieceFilterModel from "@/modules/piece/models/PieceFilterModel"
 export default {
 	data() {
 		return {
-			canSearch: true,
+			canFilter: true,
 		};
 	},
 	computed: {
@@ -44,8 +44,8 @@ export default {
 			this.$store.commit("SET_PIECE_FILTER", new PieceFilterModel())
 			this.$emit("clearFilter")
 		},
-		openSearchModal() {
-			this.$store.commit("SET_SHOW_PIECE_SEARCH_MODAL", true)
+		openFilterModal() {
+			this.$store.commit("SET_SHOW_PIECE_FILTER_MODAL", true)
 		}
 	}
 };

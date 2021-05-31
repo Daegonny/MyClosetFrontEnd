@@ -1,8 +1,11 @@
 export default {
 	getPieces: state => state.pieces,
-	getSelectedPieces: state => state.pieces.filter(p => p.isSelected),
+	getSelectedPieceIndexes: state => state.selectedPieceIndexes,
+	getSelectedPieces: state => state.selectedPieces,
+	getCurrentPiece: state => state.currentPiece,
 	getPiecesFilteredRowCount: state => state.piecesFilteredRowCount,
 	getPieceFilter: state => state.pieceFilter,
 	getShowPieceFilterModal: state => state.showPieceFilterModal,
+	getShowPieceEditModal: state => state.showPieceEditModal,
 	getIsFilterApplied: state => state.isFilterApplied
 }

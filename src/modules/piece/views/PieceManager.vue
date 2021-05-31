@@ -11,6 +11,7 @@
 		<PieceCardWrapper class="mt-2 flex-grow-1" :removeAfterSave="false" />
 		<PieceActions class="my-2" @clearFilter="updateCurrentPage(1)" />
 		<PieceFilterModal @search="updateCurrentPage(1)" />
+		<PieceEditModal />
 	</div>
 </template>
 
@@ -18,6 +19,7 @@
 import PieceCardWrapper from '@/modules/piece/components/PieceCardWrapper.vue'
 import PieceActions from '@/modules/piece/components/PieceActions.vue'
 import PieceFilterModal from '@/modules/piece/components/PieceFilterModal.vue'
+import PieceEditModal from '@/modules/piece/components/PieceEditModal.vue'
 import PieceFilterAction from '@/modules/piece/components/PieceFilterAction.vue'
 import Pagination from '@/modules/commons/components/Pagination.vue'
 
@@ -26,6 +28,7 @@ export default {
 		PieceCardWrapper,
 		Pagination,
 		PieceActions,
+		PieceEditModal,
 		PieceFilterModal,
 		PieceFilterAction,
 	},

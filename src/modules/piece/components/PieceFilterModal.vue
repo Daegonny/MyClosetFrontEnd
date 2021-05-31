@@ -9,12 +9,19 @@
 			<v-card class="pa-5 h-100">
 
 				<div class="d-flex flex-column h-100 justify-space-between">
-					<v-card-title class="headline">
-						Filtrar Peças
-					</v-card-title>
+					<div class="d-flex flex-row align-center justify-space-between">
+						<div>
+							<v-card-title class="headline">
+								Filtrar Peças
+							</v-card-title>
+						</div>
+						<div class="mr-5" @click="close">
+							<v-icon> mdi-close </v-icon>
+						</div>
+					</div>
 
 					<div class="d-flex flex-column flex-grow-1 justify-space-between">
-						<div v-if="!getIsFilterApplied">
+						<div v-if="dialog">
 							<TagSelect 
 								:propSelected="pieceFilter.tagNames"
 								@changed-tags="pieceFilter.tagNames = $event"
@@ -135,8 +142,13 @@ export default {
 		};
 	},
 	computed: {
-		dialog () {
-			return this.$store.getters.getShowPieceFilterModal
+		dialog: {
+			get (){
+				return this.$store.getters.getShowPieceFilterModal
+			},
+			set (newValue) {
+				this.$store.commit("SET_SHOW_PIECE_FILTER_MODAL", newValue)
+			}
 		},
 		getIsFilterApplied() {
 			return this.$store.getters.getIsFilterApplied
@@ -146,13 +158,13 @@ export default {
 		search() {
 			this.$store.commit("SET_PIECE_FILTER", this.pieceFilter)
 			this.pieceFilter = new PieceFilterModel()
-			this.$store.commit("SET_SHOW_PIECE_SEARCH_MODAL", false)
+			this.$store.commit("SET_SHOW_PIECE_FILTER_MODAL", false)
 			this.$store.commit("SET_IS_FILTER_APPLIED", true)
 			this.$emit("search")
 		},
 		close() {
 			this.clearFilter()
-			this.$store.commit("SET_SHOW_PIECE_SEARCH_MODAL", false)
+			this.$store.commit("SET_SHOW_PIECE_FILTER_MODAL", false)
 			this.$store.commit("SET_IS_FILTER_APPLIED", false)
 		},
 		clearFilter() {

@@ -64,15 +64,15 @@ const charCleaner = {
 	'9':'9'
 }
 Array.prototype.removeIf = function(callback) {
-    let index = 0;
-    while (index < this.length) {
-        if (callback(this[index], index)) {
-            this.splice(index, 1);
-        }
-        else {
-            ++index;
-        }
-    }
+	let index = 0;
+	while (index < this.length) {
+		if (callback(this[index], index)) {
+			this.splice(index, 1);
+		}
+		else {
+			++index;
+		}
+	}
 }
 
 function getFilePath(fullFilePath){

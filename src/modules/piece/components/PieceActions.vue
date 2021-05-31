@@ -34,7 +34,8 @@
 				block
 				outlined
 				depressed color="info"
-				:disabled="!canEdit" >
+				:disabled="!canEdit"
+				@click="openEditModal">
 					Editar <v-icon right dark> mdi-pencil </v-icon>
 				</v-btn>
 			</div>
@@ -58,12 +59,15 @@ export default {
 			return this.isLoadingRemove || this.isLoadingTag
 		},
 		canEdit() {
-			return this.getSelected.length == 1 && !this.isLoading
+			return this.selectionIsNotEmptAndIsNotLoading
 		},
 		canTag() {
-			return this.getSelected.length > 0 && !this.isLoading
+			return this.selectionIsNotEmptAndIsNotLoading
 		},
 		canRemove() {
+			return this.selectionIsNotEmptAndIsNotLoading
+		},
+		selectionIsNotEmptAndIsNotLoading() {
 			return this.getSelected.length > 0 && !this.isLoading
 		}
 	},
@@ -77,6 +81,9 @@ export default {
 			this.isLoadingTag = true
 			setTimeout(() => {  this.isLoadingTag = false; }, 2000);
 		},
+		openEditModal() {
+			this.$store.commit("SET_SHOW_PIECE_EDIT_MODAL", true)
+		}
 	}
 };
 </script>
