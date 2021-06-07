@@ -3,8 +3,10 @@
 	v-model="model"
 	multiple
 	:search-input.sync="search"
+	hide-selected
 	clearable
 	allow-overflow
+	small-chips
 	label="Tags"
 	:delimiters="[',','.',' ']"
 	placeholder="Selecione tags relevantes"
@@ -40,8 +42,11 @@ export default {
 			}	
 			this.search = value.clear()
 		},
-		model (){
+		model () {
 			this.$emit('changed-tags', this.tags)
+		},
+		propSelected (value) {
+			this.model = value	|| []
 		}
 	}
 };

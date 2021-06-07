@@ -13,7 +13,6 @@
 						<div>
 							<v-card-title class="headline">
 								Editar Peça
-								{{piece.tags}}
 							</v-card-title>
 						</div>
 						<div class="mr-5" @click="close">
@@ -53,7 +52,7 @@
 							/>
 						</div>
 						<div>
-							<tag-select 
+							<tag-select
 								:propSelected="piece.tagNames"
 								@changed-tags="piece.tagNames = $event"
 							/>
