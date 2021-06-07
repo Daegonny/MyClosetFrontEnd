@@ -11,6 +11,7 @@ export default {
 		piecesFilteredRowCount: 0,
 		pieceFilter: new PieceFilterModel(),
 		showPieceFilterModal: false,
+		showPieceUploadModal: false,
 		showPieceEditModal: false,
 		isFilterApplied: false
 	}),

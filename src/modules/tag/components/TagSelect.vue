@@ -25,7 +25,6 @@ export default {
 		}
 	},
 	created(){
-		console.log(this.propSelected)
 		this.model = this.propSelected
 		this.$emit('changed-tags', this.tags)
 	},

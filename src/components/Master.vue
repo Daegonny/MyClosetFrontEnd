@@ -35,8 +35,8 @@ export default {
 	data: () => ({
 		drawer: false,
 		currentPath: "/",
-        nextPath: "/",
-        paths: [
+		nextPath: "/",
+		paths: [
 			{
 				title: "Home",
 				icon: "mdi-home-outline",
@@ -46,13 +46,8 @@ export default {
 				title: "Meu Guarda-roupa",
 				icon: "mdi-wardrobe-outline",
 				link: "/piece/manager"
-			},
-			{
-				title: "Importar Peças",
-				icon: "mdi-tshirt-crew-outline",
-				link: "/piece/importer"
 			}
-        ]
+		]
 	}),
 	created () {
 		this.$vuetify.theme.dark = true

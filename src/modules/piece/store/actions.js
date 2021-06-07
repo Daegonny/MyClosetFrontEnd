@@ -2,14 +2,13 @@ import {http} from '@/utils/http.js'
 import PieceModel from '../models/PieceModel'
 
 export default {
-	saveFromFiles({commit}, files){
+	saveFromFiles(_, files){
 		return new Promise((resolve, reject) => {
 			http.post('Piece/SaveFromFiles', files, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}})
 				.then(response => {
-					commit('SET_PIECES', response.data)
 					resolve(response.data)
 				})
 				.catch(err => {
@@ -88,7 +87,6 @@ export default {
 	},
 
 	saveCurrentPiece({state}){
-		console.log(state.currentPiece)
 		http.put(`/Piece`, state.currentPiece)
 			.then(response => {
 				console.info(response)

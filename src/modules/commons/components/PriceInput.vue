@@ -25,13 +25,23 @@ export default {
 		}
 	},
 	watch:{
-		priceValue: function(value){
-			this.$emit('changed-price-value', value)
+		priceValue: function(){
+			this.$emit('changed-price-value', this.formatedPrice)
+		},
+		propPriceValue: function(value){
+			this.priceValue = value
 		}
 	},
 	created(){
 		this.priceValue = this.propPriceValue
-		this.$emit('changed-price-value', this.priceValue)
+	},
+	computed: {
+		formatedPrice (){
+			return this.isPriceValid ? parseFloat(this.priceValue) : null
+		},
+		isPriceValid  (){
+			return this.priceValue != undefined && this.priceValue != null
+		}
 	}
 };
 </script>

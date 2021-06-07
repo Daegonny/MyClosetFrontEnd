@@ -20,7 +20,7 @@
 		depressed color="info"
 		:disabled="!canFilter" 
 		@click="clearFilter">
-			Limpar Filtro <v-icon right dark> mdi-filter-off </v-icon>
+			Limpar <v-icon right dark> mdi-filter-off </v-icon>
 		</v-btn>
 	</div>
 </template>

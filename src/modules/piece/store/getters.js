@@ -6,6 +6,7 @@ export default {
 	getPiecesFilteredRowCount: state => state.piecesFilteredRowCount,
 	getPieceFilter: state => state.pieceFilter,
 	getShowPieceFilterModal: state => state.showPieceFilterModal,
+	getShowPieceUploadModal: state => state.showPieceUploadModal,
 	getShowPieceEditModal: state => state.showPieceEditModal,
 	getIsFilterApplied: state => state.isFilterApplied
 }

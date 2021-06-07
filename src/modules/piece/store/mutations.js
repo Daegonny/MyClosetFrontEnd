@@ -37,6 +37,10 @@ export default {
 		state.showPieceFilterModal = showPieceFilterModal
 	},
 
+	SET_SHOW_PIECE_UPLOAD_MODAL(state, showPieceUploadModal) {
+		state.showPieceUploadModal = showPieceUploadModal
+	},
+
 	SET_SHOW_PIECE_EDIT_MODAL(state, showPieceEditModal) {
 		state.showPieceEditModal = showPieceEditModal
 	},
