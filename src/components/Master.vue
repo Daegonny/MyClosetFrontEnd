@@ -26,12 +26,17 @@
 
 		<v-main>
 			<router-view></router-view>
+			<Alerts style="position: absolute"/>
 		</v-main>
 	</v-app>
 </template>
 
 <script>
+import Alerts from "@/modules/commons/components/Alerts"
 export default {
+	components: {
+		Alerts
+	},
 	data: () => ({
 		drawer: false,
 		currentPath: "/",
