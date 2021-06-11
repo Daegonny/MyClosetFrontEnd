@@ -69,6 +69,24 @@ export default {
 		},
 		selectionIsNotEmptAndIsNotLoading() {
 			return this.getSelected.length > 0 && !this.isLoading
+		},
+		getPieceFilter () {
+			return this.$store.getters.getPieceFilter
+		},
+		getResultsPerPage () {
+			return this.$store.getters.getResultsPerPage
+		}, 
+		getFirstPageResult () {
+			return this.$store.getters.getFirstPageResult
+		},
+		getCurrentPage (){
+			return this.$store.getters.getCurrentPage
+		},
+		getTotalPages (){
+			return this.$store.getters.getTotalPages
+		},
+		getIsLastPage (){
+			return this.$store.getters.getIsLastPage
 		}
 	},
 	methods: {

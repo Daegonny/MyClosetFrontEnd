@@ -146,7 +146,7 @@ export default {
 		},
 		async remove(){
 			this.removeLoading = true
-			await this.$store.dispatch("removeCurrentPiece")
+			await this.$store.dispatch("removePieces", [this.piece.id])
 			this.removeLoading = false
 		},
 		close() {

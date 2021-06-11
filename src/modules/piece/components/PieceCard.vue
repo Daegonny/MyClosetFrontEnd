@@ -19,36 +19,12 @@
 
 <script>
 import {getFilePath} from "@/utils/methods.js";
-import PieceModel from "@/modules/piece/models/PieceModel.js"
 
 export default {
 	components: {
 	},
-	props: ['index', 'piece', 'removeAfterSave'],
-	data() {
-			return {
-				menuPurchase: false,
-				removeLoading: false,
-				saveLoading: false
-			}
-	},
-	computed: {
-		canAct(){
-			return !this.removeLoading && !this.saveLoading
-		}
-	},
+	props: ['index', 'piece'],
 	methods: {
-		async remove(pieceId){
-			this.removeLoading = true
-			await this.$store.dispatch("removePiece", {pieceId})
-			this.removeLoading = false
-		},
-		async save(piece){
-			this.saveLoading = true
-			const removeAfterSave = this.$props.removeAfterSave
-			await this.$store.dispatch("savePiece", {pieceModel: new PieceModel(piece), removeAfterSave: removeAfterSave})
-			this.saveLoading = false
-		},
 		filePath(fullFilePath){
 			return getFilePath(fullFilePath)
 		},

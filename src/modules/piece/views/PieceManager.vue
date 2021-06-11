@@ -2,8 +2,8 @@
 	<div class="d-flex flex-column pa-2 h-100">
 		<v-card class="d-flex flex-row justify-space-between align-center pa-2">
 			<Pagination
-				:current="currentPage" 
-				:total="pages" 
+				:current="getCurrentPage" 
+				:total="getTotalPages" 
 				@newPage="updateCurrentPage" 
 			/>
 			<div>
@@ -62,8 +62,17 @@ export default {
 	},
 
 	computed: {
-		pages () {
-			return Math.ceil(this.getPiecesFilteredRowCount/this.resultsPerPage)
+		getResultsPerPage () {
+			return this.$store.getters.getResultsPerPage
+		}, 
+		getFirstPageResult () {
+			return this.$store.getters.getFirstPageResult
+		},
+		getCurrentPage (){
+			return this.$store.getters.getCurrentPage
+		},
+		getTotalPages () {
+			return this.$store.getters.getTotalPages
 		},
 		getPieces () {
 			return this.$store.getters.getPieces
@@ -73,16 +82,17 @@ export default {
 		},
 		getPiecesFilteredRowCount () {
 			return this.$store.getters.getPiecesFilteredRowCount
-		},
+		}
 	},
 
 	methods: {
 		async updateCurrentPage(value){
-			this.currentPage = value
-			this.firstPageResult = ((this.currentPage - 1) * this.resultsPerPage)
-			await this.fetchPiecesFiltered(this.getPieceFilter, this.firstPageResult, this.resultsPerPage)
+			this.$store.commit("SET_CURRENT_PAGE", value)
+			this.$store.commit("SET_FIRST_PAGE_RESULT", ((this.getCurrentPage - 1) * this.getResultsPerPage))
+			await this.fetchPiecesFiltered(this.getPieceFilter, this.getFirstPageResult, this.getResultsPerPage)
 		},
 		async fetchPiecesFiltered(queryFilter, start, quantity){
+			this.$store.commit('CLEAN_PIECES')
 			await this.$store.dispatch("fetchPiecesFiltered", {queryFilter, start, quantity});
 			await this.$store.dispatch("fetchPiecesFilteredRowCount", {queryFilter});
 		},

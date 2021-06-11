@@ -3,7 +3,7 @@
 		<v-row justify="start">
 			<v-col cols="4" class="pa-1"
 				v-for="(piece, index) in getPieces" :key="piece.id">
-					<piece-card :index="index" :piece="piece" :removeAfterSave="removeAfterSave"/>	
+					<PieceCard :index="index" :piece="piece" />	
 			</v-col>
 		</v-row>
 	</v-card>
@@ -14,8 +14,6 @@ export default {
 	components: {
 		PieceCard,
 	},
-
-	props: ['removeAfterSave'],
 
 	computed: {
 		getPieces () {

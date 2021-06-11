@@ -1,6 +1,10 @@
 export default {
+	getResultsPerPage: state => state.resultsPerPage,
+	getFirstPageResult: state => state.firstPageResult,
+	getCurrentPage: state => state.currentPage,
+	getTotalPages: state => Math.ceil(state.piecesFilteredRowCount/state.resultsPerPage),
+	getIsLastPage: state => state.currentPage == Math.ceil(state.piecesFilteredRowCount/state.resultsPerPage),
 	getPieces: state => state.pieces,
-	getSelectedPieceIndexes: state => state.selectedPieceIndexes,
 	getSelectedPieces: state => state.selectedPieces,
 	getCurrentPiece: state => state.currentPiece,
 	getPiecesFilteredRowCount: state => state.piecesFilteredRowCount,

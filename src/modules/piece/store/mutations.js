@@ -1,6 +1,28 @@
 export default {
-    SET_PIECES(state, pieces) {
-		state.pieces = pieces
+	
+	SET_RESULTS_PER_PAGE(state, resultsPerPage){
+		state.resultsPerPage = resultsPerPage
+	},
+
+	SET_FIRST_PAGE_RESULT(state, firstPageResult){
+		state.firstPageResult = firstPageResult
+	},
+
+	SET_CURRENT_PAGE(state, currentPage){
+		state.currentPage = currentPage
+	},
+
+	ADD_PIECES(state, pieces) {
+		state.pieces = state.pieces.concat(pieces)
+	},
+
+	CLEAN_PIECES(state) {
+		state.pieces = []
+	},
+
+	CLEAN_SELECTED_PIECES(state) {
+		state.selectedPieces = []
+		state.currentPiece = undefined
 	},
 
 	ADD_SELECTED_PIECE(state, piece) {

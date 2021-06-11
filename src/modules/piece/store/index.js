@@ -5,6 +5,9 @@ import PieceFilterModel from '@/modules/piece/models/PieceFilterModel'
 
 export default {
 	state: () => ({
+		resultsPerPage: 12,
+		firstPageResult: 0, 
+		currentPage: 1,
 		pieces: [],
 		selectedPieces: [],
 		currentPiece: undefined,

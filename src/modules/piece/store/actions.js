@@ -21,7 +21,8 @@ export default {
 		return new Promise((resolve, reject) => {
 			http.get(`/Piece/Filtered?start=${start}&quantity=${quantity}${queryFilter.queryString()}`)
 				.then(response => {
-					commit('SET_PIECES', response.data.map(r => new PieceModel(r)))
+					commit('ADD_PIECES', response.data.map(r => new PieceModel(r)))
+					commit('CLEAN_SELECTED_PIECES')
 					resolve(response.data)
 				})
 				.catch(err => {
@@ -43,78 +44,28 @@ export default {
 		})
 	},
 
-	// removePiece({commit, state}, {pieceId}){
-	// 	return new Promise((resolve, reject) => {
-	// 		http.delete(`/Piece/${pieceId}`)
-	// 			.then(response => {
-	// 				const newPieces = state.pieces
-	// 				newPieces.removeIf( i => i.id == pieceId);
-	// 				commit('SET_PIECES', newPieces)
-	// 				commit('REMOVE_SELECTED_PIECE_INDEX', pieceId)
-					
-	// 				resolve(response.data)
-
-	// 			})
-	// 			.catch(err => {
-	// 				reject(err)
-	// 			})
-	// 	});
-	// },
-
-	removeCurrentPiece({commit, state}){
-		const currentPiece = state.currentPiece
-		commit("ITERATE_SELECTED_PIECE_INDEX", 1)
-		state.selectedPieces.removeIf(s => s.id == currentPiece.id)
-		state.pieces.removeIf(p => p.id == currentPiece.id)
-		if(state.selectedPieces.length == 0)
-			commit("SET_SHOW_PIECE_EDIT_MODAL", false)		
-
-		// return new Promise((resolve, reject) => {
-		// 	http.delete(`/Piece/${pieceId}`)
-		// 		.then(response => {
-		// 			const newPieces = state.pieces
-		// 			newPieces.removeIf( i => i.id == pieceId);
-		// 			commit('SET_PIECES', newPieces)
-		// 			commit('REMOVE_SELECTED_PIECE_INDEX', pieceId)
-					
-		// 			resolve(response.data)
-
-		// 		})
-		// 		.catch(err => {
-		// 			reject(err)
-		// 		})
-		// });
-	},
-
 	saveCurrentPiece({state}){
-		http.put(`/Piece`, state.currentPiece)
-			.then(response => {
-				console.info(response)
-			})
-			.catch(err => {
-				console.error(err)
-			})
-	},
-
-	removePieces({commit, state}, pieceIds){
 		return new Promise((resolve, reject) => {
-			http.delete('/Piece/Multiple', {data: pieceIds})
+			http.put(`/Piece`, state.currentPiece)
 				.then(response => {
-					const newPieces = state.pieces
-					newPieces.removeIf( i => pieceIds.includes(i.id));
-					commit('SET_PIECES', newPieces)
 					resolve(response.data)
 				})
 				.catch(err => {
-					reject(err)
+					reject.error(err.data)
 				})
-		});
+		})
 	},
 
-	savePieces(_, pieces){
+	removePieces({commit, state, getters, dispatch}, pieceIds){
 		return new Promise((resolve, reject) => {
-			http.put('/Piece/Multiple', pieces)
-				.then(response => {
+			http.delete('/Piece/Multiple', {data: pieceIds})
+				.then(async response => {
+					for (const pieceId of pieceIds)
+						removePiece({commit, state}, pieceId)
+
+					if(!getters.getIsLastPage)
+						await fetchPiecesMissing({dispatch, getters}, pieceIds)
+
 					resolve(response.data)
 				})
 				.catch(err => {
@@ -122,4 +73,27 @@ export default {
 				})
 		});
 	}
+}
+
+function removePiece({commit, state}, pieceId){
+	if(state.currentPiece.id == pieceId)
+		handleRemoveCurrentPiece({commit, state})
+	state.selectedPieces.removeIf(s => s.id == pieceId)
+	state.pieces.removeIf(s => s.id == pieceId)
+}
+
+function handleRemoveCurrentPiece({commit, state}){
+	if(state.selectedPieces.length > 1)
+		commit("ITERATE_SELECTED_PIECE_INDEX", 1)
+	else
+		commit("SET_SHOW_PIECE_EDIT_MODAL", false)
+}
+
+async function fetchPiecesMissing({dispatch, getters}, pieceIds){
+	await dispatch("fetchPiecesFiltered", {
+		queryFilter: getters.getPieceFilter, 
+		start: getters.getFirstPageResult + getters.getResultsPerPage - pieceIds.length, 
+		quantity: pieceIds.length
+	})
+	await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
 }
