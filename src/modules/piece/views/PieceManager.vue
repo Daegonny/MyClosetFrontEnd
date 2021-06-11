@@ -93,6 +93,7 @@ export default {
 		},
 		async fetchPiecesFiltered(queryFilter, start, quantity){
 			this.$store.commit('CLEAN_PIECES')
+			this.$store.commit('CLEAN_SELECTED_PIECES')
 			await this.$store.dispatch("fetchPiecesFiltered", {queryFilter, start, quantity});
 			await this.$store.dispatch("fetchPiecesFilteredRowCount", {queryFilter});
 		},

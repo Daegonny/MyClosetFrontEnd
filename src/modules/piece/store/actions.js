@@ -22,7 +22,6 @@ export default {
 			http.get(`/Piece/Filtered?start=${start}&quantity=${quantity}${queryFilter.queryString()}`)
 				.then(response => {
 					commit('ADD_PIECES', response.data.map(r => new PieceModel(r)))
-					commit('CLEAN_SELECTED_PIECES')
 					resolve(response.data)
 				})
 				.catch(err => {
@@ -63,9 +62,16 @@ export default {
 					for (const pieceId of pieceIds)
 						removePiece({commit, state}, pieceId)
 
-					if(!getters.getIsLastPage)
-						await fetchPiecesMissing({dispatch, getters}, pieceIds)
+					if(getters.getIsLastPage)
+						await handleRemoveLastPage({commit, dispatch, getters})
+					else
+						await dispatch("fetchPiecesFiltered", {
+							queryFilter: getters.getPieceFilter, 
+							start: getters.getFirstPageResult + getters.getResultsPerPage - pieceIds.length, 
+							quantity: pieceIds.length
+						})
 
+					await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
 					resolve(response.data)
 				})
 				.catch(err => {
@@ -89,11 +95,14 @@ function handleRemoveCurrentPiece({commit, state}){
 		commit("SET_SHOW_PIECE_EDIT_MODAL", false)
 }
 
-async function fetchPiecesMissing({dispatch, getters}, pieceIds){
-	await dispatch("fetchPiecesFiltered", {
-		queryFilter: getters.getPieceFilter, 
-		start: getters.getFirstPageResult + getters.getResultsPerPage - pieceIds.length, 
-		quantity: pieceIds.length
-	})
-	await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
+async function handleRemoveLastPage({commit, dispatch, getters}){
+	if(getters.getPieces.length == 0){
+		commit("SET_CURRENT_PAGE", getters.getCurrentPage - 1)
+		commit("SET_FIRST_PAGE_RESULT", ((getters.getCurrentPage - 1) * getters.getResultsPerPage))
+		await dispatch("fetchPiecesFiltered", {
+			queryFilter: getters.getPieceFilter, 
+			start: getters.getFirstPageResult, 
+			quantity: getters.getResultsPerPage
+		})
+	}
 }

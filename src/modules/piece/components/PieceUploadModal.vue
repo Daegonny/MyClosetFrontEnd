@@ -80,7 +80,7 @@ export default {
 			inputFiles: [],
 			files: new FormData(),
 			uploadLoading: false,
-			fileUploadLimit: 12,
+			fileUploadLimit: 50,
 			inputFilesRules: [
 				files => files.length <= this.fileUploadLimit  || 'O limte de importação é de 12 imagens por vez!'
 			]
