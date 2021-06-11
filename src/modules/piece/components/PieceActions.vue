@@ -62,7 +62,7 @@ export default {
 			return this.selectionIsNotEmptAndIsNotLoading
 		},
 		canTag() {
-			return this.selectionIsNotEmptAndIsNotLoading
+			return this.selectionIsNotEmptAndIsNotLoading && false
 		},
 		canRemove() {
 			return this.selectionIsNotEmptAndIsNotLoading
