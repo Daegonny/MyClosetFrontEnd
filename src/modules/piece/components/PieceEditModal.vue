@@ -3,101 +3,100 @@
 		v-model="dialog"
 		fullscreen
 		hide-overlay
+		persistent
+		no-click-animation
 		transition="dialog-top-transition"
 	>
-		<div v-if="dialog" class="h-100">
-			<v-card class="pa-5">
-
-				<div class="d-flex flex-column justify-space-between">
-					<div class="d-flex flex-row align-center justify-space-between">
-						<div>
-							<v-card-title class="headline">
-								Editar Peça
-							</v-card-title>
-						</div>
-						<div class="mr-5" @click="close">
-							<v-icon> mdi-close </v-icon>
-						</div>
+		<v-card v-if="dialog">
+			<div class="pa-5 d-flex flex-column justify-space-between">
+				<div class="d-flex flex-row align-center justify-space-between">
+					<div>
+						<v-card-title class="headline">
+							Editar Peça
+						</v-card-title>
 					</div>
-
-					<div class="d-flex flex-column flex-grow-1 justify-space-between">
-						<div class="d-flex flex-row justify-center align-center">
-							<div class="w-70">
-								<v-img
-									aspect-ratio="1"
-									:src='filePath(piece.fullFilePath)'
-								/>
-							</div>
-						</div>
-						<div class="mt-4">
-							<v-text-field 
-								v-model="piece.name"
-								clearable
-								label="Nome"
-								hint="Identifique essa peça com um nome."
-							/>
-						</div>
-						<div>
-							<price-input
-								:propPriceValue="piece.price"
-								:label="'Valor'"
-								@changed-price-value="piece.price = $event"
-							/>
-						</div>
-						<div>
-							<custom-date-picker 
-								:propDate="piece.purchase" 
-								@changed-date-value="piece.purchase = $event"
-								:label="'Data de Aquisição'"
-							/>
-						</div>
-						<div>
-							<tag-select
-								:propSelected="piece.tagNames"
-								@changed-tags="piece.tagNames = $event"
-							/>
-						</div>
-					</div>
-
-					<div class="mt-5 d-flex flex-row justify-space-between align-center flex-grow-1">
-						<div>
-							<v-btn fab small @click="iterateCurrentPiece(-1)">
-								<v-icon>mdi-arrow-left</v-icon>
-							</v-btn>
-						</div>
-						<div>
-							<v-btn 
-							small
-							block
-							outlined
-							:disabled="!canAct"
-							:loading="removeLoading"
-							@click="remove"
-							depressed color="error">
-								Remover <v-icon right dark> mdi-trash-can </v-icon>
-							</v-btn>
-						</div>
-						<div>
-							<v-btn 
-							small
-							block
-							outlined
-							:disabled="!canAct"
-							:loading="saveLoading"
-							@click="save"
-							depressed color="success">
-								Salvar <v-icon right dark> mdi-floppy </v-icon>
-							</v-btn>
-						</div>
-						<div>
-							<v-btn fab small @click="iterateCurrentPiece(1)">
-								<v-icon>mdi-arrow-right</v-icon>
-							</v-btn>
-						</div>
+					<div class="mr-5" @click="close">
+						<v-icon> mdi-close </v-icon>
 					</div>
 				</div>
-			</v-card>
-		</div>
+
+				<div class="d-flex flex-column flex-grow-1 justify-space-between">
+					<div class="d-flex flex-row justify-center align-center">
+						<div class="w-70">
+							<v-img
+								aspect-ratio="1"
+								:src='filePath(piece.fullFilePath)'
+							/>
+						</div>
+					</div>
+					<div class="mt-4">
+						<v-text-field 
+							v-model="piece.name"
+							clearable
+							label="Nome"
+							hint="Identifique essa peça com um nome."
+						/>
+					</div>
+					<div>
+						<price-input
+							:propPriceValue="piece.price"
+							:label="'Valor'"
+							@changed-price-value="piece.price = $event"
+						/>
+					</div>
+					<div>
+						<custom-date-picker 
+							:propDate="piece.purchase" 
+							@changed-date-value="piece.purchase = $event"
+							:label="'Data de Aquisição'"
+						/>
+					</div>
+					<div>
+						<tag-select
+							:propSelected="piece.tagNames"
+							@changed-tags="piece.tagNames = $event"
+						/>
+					</div>
+				</div>
+
+				<div class="mt-5 d-flex flex-row justify-space-between align-center flex-grow-1">
+					<div>
+						<v-btn fab small @click="iterateCurrentPiece(-1)" :disabled="isSinglePieceSelected">
+							<v-icon>mdi-arrow-left</v-icon>
+						</v-btn>
+					</div>
+					<div>
+						<v-btn 
+						small
+						block
+						outlined
+						:disabled="!canAct"
+						:loading="removeLoading"
+						@click="remove"
+						depressed color="error">
+							Remover <v-icon right dark> mdi-trash-can </v-icon>
+						</v-btn>
+					</div>
+					<div>
+						<v-btn 
+						small
+						block
+						outlined
+						:disabled="!canAct"
+						:loading="saveLoading"
+						@click="save"
+						depressed color="success">
+							Salvar <v-icon right dark> mdi-floppy </v-icon>
+						</v-btn>
+					</div>
+					<div>
+						<v-btn fab small @click="iterateCurrentPiece(1)" :disabled="isSinglePieceSelected">
+							<v-icon>mdi-arrow-right</v-icon>
+						</v-btn>
+					</div>
+				</div>
+			</div>
+		</v-card>
 	</v-dialog>
 </template>
 
@@ -137,6 +136,9 @@ export default {
 				return this.$store.getters.getCurrentPiece
 			}
 		},
+		isSinglePieceSelected(){
+			return this.$store.getters.getSelectedPieces.length == 1
+		}
 	},
 	methods: {
 		async save() {

@@ -2,7 +2,7 @@ import {http} from '@/utils/http.js'
 import PieceModel from '../models/PieceModel'
 
 export default {
-	saveFromFiles(_, files){
+	saveFromFiles({commit}, {files, quantity}){
 		return new Promise((resolve, reject) => {
 			http.post('Piece/SaveFromFiles', files, {
 				headers: {
@@ -10,6 +10,7 @@ export default {
 				}})
 				.then(response => {
 					resolve(response.data)
+					commit("ADD_OK_MESSAGE", `${quantity} arquivo(s) adicionado(s)`)
 				})
 				.catch(err => {
 					reject(err)
@@ -43,14 +44,16 @@ export default {
 		})
 	},
 
-	saveCurrentPiece({state}){
+	saveCurrentPiece({state, commit}){
 		return new Promise((resolve, reject) => {
 			http.put(`/Piece`, state.currentPiece)
 				.then(response => {
 					resolve(response.data)
+					commit("ADD_OK_MESSAGE", "Peça salva com sucesso")
 				})
 				.catch(err => {
 					reject.error(err.data)
+					commit("ADD_ERROR_MESSAGE", "Falha ao salvar peça")
 				})
 		})
 	},
@@ -62,20 +65,14 @@ export default {
 					for (const pieceId of pieceIds)
 						removePiece({commit, state}, pieceId)
 
-					if(getters.getIsLastPage)
-						await handleRemoveLastPage({commit, dispatch, getters})
-					else
-						await dispatch("fetchPiecesFiltered", {
-							queryFilter: getters.getPieceFilter, 
-							start: getters.getFirstPageResult + getters.getResultsPerPage - pieceIds.length, 
-							quantity: pieceIds.length
-						})
-
+					await handleLastPage({getters, commit, dispatch}, pieceIds)
 					await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
+					commit("ADD_OK_MESSAGE", `${pieceIds.length} Peça(s) removida(s) com sucesso`)
 					resolve(response.data)
 				})
 				.catch(err => {
 					reject(err)
+					commit("ADD_ERROR_MESSAGE", `Falha ao remover peça(s)`)
 				})
 		});
 	}
@@ -93,6 +90,17 @@ function handleRemoveCurrentPiece({commit, state}){
 		commit("ITERATE_SELECTED_PIECE_INDEX", 1)
 	else
 		commit("SET_SHOW_PIECE_EDIT_MODAL", false)
+}
+
+async function handleLastPage({getters, commit, dispatch}, pieceIds){
+	if(getters.getIsLastPage)
+		await handleRemoveLastPage({commit, dispatch, getters})
+	else
+		await dispatch("fetchPiecesFiltered", {
+			queryFilter: getters.getPieceFilter, 
+			start: getters.getFirstPageResult + getters.getResultsPerPage - pieceIds.length, 
+			quantity: pieceIds.length
+		})
 }
 
 async function handleRemoveLastPage({commit, dispatch, getters}){

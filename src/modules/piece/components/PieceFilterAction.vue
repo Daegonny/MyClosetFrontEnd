@@ -42,6 +42,7 @@ export default {
 		clearFilter() {
 			this.$store.commit("SET_IS_FILTER_APPLIED", false)
 			this.$store.commit("SET_PIECE_FILTER", new PieceFilterModel())
+			this.$store.commit("ADD_INFO_MESSAGE", "Filtro removido")
 			this.$emit("clearFilter")
 		},
 		openFilterModal() {

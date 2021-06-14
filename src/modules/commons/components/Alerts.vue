@@ -1,20 +1,18 @@
 <template>
 	<div>
-		<div v-for="(message, index) in getMessages" :key="index">
-			<v-snackbar 
-				class="elevation-0 z-index-20"
-				:color="message.color" 
-				v-model="message.show"
-				:timeout="message.timeout" 
-				top
-				vertical
-				>
-				<div class="d-flex flex-row justify-space-between">
-					<div v-html="message.text">
-					</div>
+		<v-snackbar v-for="(message, index) in getMessages" :key="index"
+			:color="message.color" 
+			v-model="message.show"
+			:timeout="message.timeout"
+			>
+			<div class="d-flex flex-row justify-space-between">
+				<div v-html="message.text">
 				</div>
-			</v-snackbar>
-		</div>
+				<div>
+					<slot></slot>
+				</div>
+			</div>
+		</v-snackbar>
 	</div>
 </template>
 

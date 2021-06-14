@@ -40,6 +40,9 @@ export default {
 	watch:{
 		dateValue: function(value){
 			this.$emit('changed-date-value', value)
+		},
+		propDate: function(value){
+			this.dateValue = this.formatDateTime(value)
 		}
 	},
 	created(){

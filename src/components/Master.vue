@@ -26,7 +26,7 @@
 
 		<v-main>
 			<router-view></router-view>
-			<Alerts style="position: absolute"/>
+			<Alerts/>
 		</v-main>
 	</v-app>
 </template>

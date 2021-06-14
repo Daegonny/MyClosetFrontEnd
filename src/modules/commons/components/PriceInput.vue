@@ -4,7 +4,7 @@
 	v-bind:clearable="true"
 	v-bind:valueWhenIsEmpty="null"
 	v-bind:options="moneyOptions"
-	v-bind:background-color="color || '#333'"
+	v-bind:background-color="color || '#1e1e1e'"
 	v-bind:label="label"
 	/>
 </template>

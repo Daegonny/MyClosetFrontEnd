@@ -20,7 +20,7 @@ function createMessage(message, color) {
 	return {
 		text: message,
 		color: color,
-		timeout: 4000,
+		timeout: 2000,
 		show: true
 	}
 }
