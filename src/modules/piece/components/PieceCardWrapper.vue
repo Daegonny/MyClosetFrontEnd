@@ -1,8 +1,9 @@
 <template>
-	<v-card v-if="getPieces.length > 0" class="px-5 mt-5">
-		<v-row>
-			<v-col xs="12" sm="12" md="6" lg="4" xl="3" class="d-flex child-flex" v-for="piece in getPieces" :key="piece.id">
-				<piece-card :piece="piece" :removeAfterSave="removeAfterSave"/>	
+	<v-card v-if="getPieces.length > 0" class="px-3">
+		<v-row justify="start">
+			<v-col cols="4" class="pa-1"
+				v-for="(piece, index) in getPieces" :key="piece.id">
+					<PieceCard :index="index" :piece="piece" />	
 			</v-col>
 		</v-row>
 	</v-card>
@@ -13,8 +14,6 @@ export default {
 	components: {
 		PieceCard,
 	},
-
-	props: ['removeAfterSave'],
 
 	computed: {
 		getPieces () {

@@ -64,15 +64,15 @@ const charCleaner = {
 	'9':'9'
 }
 Array.prototype.removeIf = function(callback) {
-    let index = 0;
-    while (index < this.length) {
-        if (callback(this[index], index)) {
-            this.splice(index, 1);
-        }
-        else {
-            ++index;
-        }
-    }
+	let index = 0;
+	while (index < this.length) {
+		if (callback(this[index], index)) {
+			this.splice(index, 1);
+		}
+		else {
+			++index;
+		}
+	}
 }
 
 function getFilePath(fullFilePath){
@@ -96,31 +96,6 @@ function fromBRMoneyToNumber (value){
 	return +value;
 }
 
-function getPieceQueryFilterString(queryFilter){ //TODO: Mover para classe de filtros
-	let stringRequest = ''
-
-	if(queryFilter.name)
-		stringRequest += `&name=${queryFilter.name}`
-
-	if(queryFilter.purchaseDateMin)
-		stringRequest += `&purchaseDateMin=${queryFilter.purchaseDateMin}`
-
-	if(queryFilter.purchaseDateMax)
-		stringRequest += `&purchaseDateMax=${queryFilter.purchaseDateMax}`
-
-	if(queryFilter.priceMin)
-		stringRequest += `&priceMin=${queryFilter.priceMin}`
-
-	if(queryFilter.priceMax)
-		stringRequest += `&priceMax=${queryFilter.priceMax}`
-
-	if(queryFilter.tagNames && queryFilter.tagNames.length)
-		for (const tagName of queryFilter.tagNames) {
-			stringRequest += `&tagNames=${tagName}`
-		}
-
-	return `${stringRequest}&mustHaveAllTagNames=${queryFilter.mustHaveAllTagNames}`
-}
 
 String.prototype.clear = function () {
 	let newValue = ""
@@ -134,7 +109,6 @@ String.prototype.clear = function () {
 
 export {
     getFilePath,
-    getPieceQueryFilterString,
     dateTimeToDateString,
     fromBRMoneyToNumber
 };

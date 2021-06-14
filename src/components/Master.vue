@@ -26,35 +26,22 @@
 
 		<v-main>
 			<router-view></router-view>
+			<Alerts style="position: absolute"/>
 		</v-main>
-
-		<v-footer
-			dark
-			padless
-		>
-			<v-card
-			class="flex"
-			flat
-			tile
-			>
-			<v-card-text class="py-2 text-center">
-				{{ new Date().getFullYear() }} — <strong>MyCloset</strong>
-				<v-btn small fab @click="goToTop" class="ml-5 grey darken-4">
-						<v-icon>mdi-arrow-up-thick</v-icon>
-				</v-btn>
-			</v-card-text>
-			</v-card>
-		</v-footer>
 	</v-app>
 </template>
 
 <script>
+import Alerts from "@/modules/commons/components/Alerts"
 export default {
+	components: {
+		Alerts
+	},
 	data: () => ({
 		drawer: false,
 		currentPath: "/",
-        nextPath: "/",
-        paths: [
+		nextPath: "/",
+		paths: [
 			{
 				title: "Home",
 				icon: "mdi-home-outline",
@@ -64,13 +51,8 @@ export default {
 				title: "Meu Guarda-roupa",
 				icon: "mdi-wardrobe-outline",
 				link: "/piece/manager"
-			},
-			{
-				title: "Importar Peças",
-				icon: "mdi-tshirt-crew-outline",
-				link: "/piece/importer"
 			}
-        ]
+		]
 	}),
 	created () {
 		this.$vuetify.theme.dark = true
@@ -81,12 +63,6 @@ export default {
 				this.currentPath = value;
 				this.$router.push(value);
 			}
-		}
-	},
-	methods: {
-		goToTop (){
-			document.body.scrollTop = 0;
-			document.documentElement.scrollTop = 0;
 		}
 	}
 }

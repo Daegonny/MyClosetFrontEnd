@@ -4,7 +4,9 @@ export default class PieceModel {
 		this.name = piece.name;
 		this.price = this.isPriceValid(piece.price) ? parseFloat(piece.price) : null;
 		this.purchase = piece.purchase;
-		this.tagNames = piece.tags
+		this.tagNames = piece.tags.length > 0 ? piece.tags.map(t => t.name)  : []
+		this.fullFilePath = piece.fullFilePath
+		this.isSelected = false
 	}
 
 	isPriceValid = function (priece){

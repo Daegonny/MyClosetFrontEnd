@@ -1,16 +1,16 @@
 import {http} from '@/utils/http.js'
-import {getPieceQueryFilterString} from "@/utils/methods.js"
+import PieceModel from '../models/PieceModel'
 
 export default {
-	saveFromFiles({commit}, files){
+	saveFromFiles({commit}, {files, quantity}){
 		return new Promise((resolve, reject) => {
 			http.post('Piece/SaveFromFiles', files, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}})
 				.then(response => {
-					commit('SET_PIECES', response.data)
 					resolve(response.data)
+					commit("ADD_OK_MESSAGE", `${quantity} arquivo(s) adicionado(s)`)
 				})
 				.catch(err => {
 					reject(err)
@@ -20,9 +20,9 @@ export default {
 
 	fetchPiecesFiltered({commit},{queryFilter, start, quantity}){
 		return new Promise((resolve, reject) => {
-			http.get(`/Piece/Filtered?start=${start}&quantity=${quantity}${getPieceQueryFilterString(queryFilter)}`)
+			http.get(`/Piece/Filtered?start=${start}&quantity=${quantity}${queryFilter.queryString()}`)
 				.then(response => {
-					commit('SET_PIECES', response.data)
+					commit('ADD_PIECES', response.data.map(r => new PieceModel(r)))
 					resolve(response.data)
 				})
 				.catch(err => {
@@ -33,7 +33,7 @@ export default {
 
 	fetchPiecesFilteredRowCount({commit},{queryFilter}){
 		return new Promise((resolve, reject) => {
-			http.get(`/Piece/Filtered/RowCount?${getPieceQueryFilterString(queryFilter)}`)
+			http.get(`/Piece/Filtered/RowCount?${queryFilter.queryString()}`)
 				.then(response => {
 					commit('SET_PIECES_FILTERED_ROW_COUNT', response.data)
 					resolve(response.data)
@@ -44,62 +44,73 @@ export default {
 		})
 	},
 
-	removePiece({commit, state}, {pieceId}){
+	saveCurrentPiece({state, commit}){
 		return new Promise((resolve, reject) => {
-			http.delete(`/Piece/${pieceId}`)
+			http.put(`/Piece`, state.currentPiece)
 				.then(response => {
-					const newPieces = state.pieces
-					newPieces.removeIf( i => i.id == pieceId);
-					commit('SET_PIECES', newPieces)
 					resolve(response.data)
+					commit("ADD_OK_MESSAGE", "Peça salva com sucesso")
 				})
 				.catch(err => {
-					reject(err)
+					reject.error(err.data)
+					commit("ADD_ERROR_MESSAGE", "Falha ao salvar peça")
 				})
-		});
+		})
 	},
 
-	savePiece({commit, state}, {pieceModel, removeAfterSave}){
-		return new Promise((resolve, reject) => {
-			http.put(`/Piece`, pieceModel)
-				.then(response => {
-					
-					if(removeAfterSave){
-						const newPieces = state.pieces
-						newPieces.removeIf( i => i.id == pieceModel.id)
-						commit('SET_PIECES', newPieces)
-					}
-					
-					resolve(response.data)
-				})
-				.catch(err => {
-					reject(err)
-				})
-		});
-	},
-
-	removePieces({commit}, pieceIds){
+	removePieces({commit, state, getters, dispatch}, pieceIds){
 		return new Promise((resolve, reject) => {
 			http.delete('/Piece/Multiple', {data: pieceIds})
-				.then(response => {
-					commit('SET_PIECES', [])
-					resolve(response.data)
-				})
-				.catch(err => {
-					reject(err)
-				})
-		});
-	},
+				.then(async response => {
+					for (const pieceId of pieceIds)
+						removePiece({commit, state}, pieceId)
 
-	savePieces(_, pieces){
-		return new Promise((resolve, reject) => {
-			http.put('/Piece/Multiple', pieces)
-				.then(response => {
+					await handleLastPage({getters, commit, dispatch}, pieceIds)
+					await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
+					commit("ADD_OK_MESSAGE", `${pieceIds.length} Peça(s) removida(s) com sucesso`)
 					resolve(response.data)
 				})
 				.catch(err => {
 					reject(err)
+					commit("ADD_ERROR_MESSAGE", `Falha ao remover peça(s)`)
 				})
 		});
+	}
+}
+
+function removePiece({commit, state}, pieceId){
+	if(state.currentPiece.id == pieceId)
+		handleRemoveCurrentPiece({commit, state})
+	state.selectedPieces.removeIf(s => s.id == pieceId)
+	state.pieces.removeIf(s => s.id == pieceId)
+}
+
+function handleRemoveCurrentPiece({commit, state}){
+	if(state.selectedPieces.length > 1)
+		commit("ITERATE_SELECTED_PIECE_INDEX", 1)
+	else
+		commit("SET_SHOW_PIECE_EDIT_MODAL", false)
+}
+
+async function handleLastPage({getters, commit, dispatch}, pieceIds){
+	if(getters.getIsLastPage)
+		await handleRemoveLastPage({commit, dispatch, getters})
+	else
+		await dispatch("fetchPiecesFiltered", {
+			queryFilter: getters.getPieceFilter, 
+			start: getters.getFirstPageResult + getters.getResultsPerPage - pieceIds.length, 
+			quantity: pieceIds.length
+		})
+}
+
+async function handleRemoveLastPage({commit, dispatch, getters}){
+	if(getters.getPieces.length == 0){
+		commit("SET_CURRENT_PAGE", getters.getCurrentPage - 1)
+		commit("SET_FIRST_PAGE_RESULT", ((getters.getCurrentPage - 1) * getters.getResultsPerPage))
+		await dispatch("fetchPiecesFiltered", {
+			queryFilter: getters.getPieceFilter, 
+			start: getters.getFirstPageResult, 
+			quantity: getters.getResultsPerPage
+		})
 	}
 }
