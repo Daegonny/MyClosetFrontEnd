@@ -1,9 +1,11 @@
 <template>
 	<div>
 		<v-snackbar v-for="(message, index) in getMessages" :key="index"
+			class="z-index-20"
 			:color="message.color" 
 			v-model="message.show"
 			:timeout="message.timeout"
+			centered
 			>
 			<div class="d-flex flex-row justify-space-between">
 				<div v-html="message.text">
