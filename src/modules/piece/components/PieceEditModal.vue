@@ -67,9 +67,9 @@
 					</div>
 					<div>
 						<v-btn 
+						class="text-subtitle-2 text-none" 
 						small
 						block
-						outlined
 						:disabled="!canAct"
 						:loading="removeLoading"
 						@click="remove"
@@ -78,10 +78,10 @@
 						</v-btn>
 					</div>
 					<div>
-						<v-btn 
+						<v-btn
+						class="text-subtitle-2 text-none"  
 						small
 						block
-						outlined
 						:disabled="!canAct"
 						:loading="saveLoading"
 						@click="save"

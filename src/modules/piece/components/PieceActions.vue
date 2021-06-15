@@ -6,12 +6,11 @@
 				class="text-subtitle-2 text-none" 
 				small
 				block
-				outlined
 				depressed color="error"
 				:loading="isLoadingRemove"
 				:disabled="!canRemove" 
 				@click="removeSelected">
-					Remover <v-icon right dark> mdi-trash-can </v-icon>
+					Remover <v-icon right> mdi-trash-can </v-icon>
 				</v-btn>
 			</div>
 			<div class="ml-1">
@@ -19,7 +18,6 @@
 				class="text-subtitle-2 text-none" 
 				small
 				block
-				outlined
 				depressed color="success"
 				:loading="isLoadingTag"
 				:disabled="!canTag" 
@@ -32,7 +30,6 @@
 				class="text-subtitle-2 text-none" 
 				small
 				block
-				outlined
 				depressed color="info"
 				:disabled="!canEdit"
 				@click="openEditModal">

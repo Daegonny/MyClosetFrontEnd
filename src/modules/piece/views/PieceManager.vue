@@ -11,7 +11,6 @@
 				class="text-subtitle-2 text-none" 
 				small
 				block
-				outlined
 				depressed
 				@click="openUploadModal"
 				>
