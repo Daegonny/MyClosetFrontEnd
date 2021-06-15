@@ -53,7 +53,7 @@
 							class="text-subtitle-2 text-none"  
 							small
 							block
-							depressed color="info"
+							depressed color="success"
 							:disabled="!canUpload" 
 							:loading="uploadLoading"
 							@click="upload"

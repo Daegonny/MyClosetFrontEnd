@@ -9,6 +9,7 @@
 			<div>
 				<v-btn 
 				class="text-subtitle-2 text-none" 
+				color="success"
 				small
 				block
 				depressed
