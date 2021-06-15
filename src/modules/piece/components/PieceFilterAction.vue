@@ -5,7 +5,6 @@
 		class="text-subtitle-2 text-none" 
 		small
 		block
-		outlined
 		depressed color="info"
 		:disabled="!canFilter" 
 		@click="openFilterModal">
@@ -16,7 +15,6 @@
 		class="text-subtitle-2 text-none" 
 		small
 		block
-		outlined
 		depressed color="info"
 		:disabled="!canFilter" 
 		@click="clearFilter">

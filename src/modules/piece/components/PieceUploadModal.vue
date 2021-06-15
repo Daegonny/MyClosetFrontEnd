@@ -39,21 +39,21 @@
 				<v-card-actions class="d-flex flex-row justify-end">
 					<div class="d-flex flex-row">
 						<div class="mr-5">
-							<v-btn 
+							<v-btn
+							class="text-subtitle-2 text-none"  
 							small
 							block
-							outlined
 							depressed color="error"
 							@click="close">
 								Cancelar <v-icon right dark> mdi-cancel </v-icon>
 							</v-btn>
 						</div>
 						<div>
-							<v-btn 
+							<v-btn
+							class="text-subtitle-2 text-none"  
 							small
 							block
-							outlined
-							depressed color="info"
+							depressed color="success"
 							:disabled="!canUpload" 
 							:loading="uploadLoading"
 							@click="upload"
