@@ -159,7 +159,6 @@ export default {
 			this.pieceFilter = new PieceFilterModel()
 			this.$store.commit("SET_SHOW_PIECE_FILTER_MODAL", false)
 			this.$store.commit("SET_IS_FILTER_APPLIED", true)
-			this.$store.commit("ADD_INFO_MESSAGE", "Filtro aplicado")
 			this.$emit("search")
 		},
 		close() {
