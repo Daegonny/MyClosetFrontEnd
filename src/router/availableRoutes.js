@@ -1,3 +1,5 @@
 export const AvailableRoutes = {
-	Login: "/"
+	Login: "/",
+	Home: "/home",
+	PieceManager: "/piece/manager",
 }

@@ -1,4 +1,4 @@
-import {baseURL} from '@/utils/http.js'
+import { baseURL } from '@/http/helper.js'
 
 const charCleaner = {
 	' ':'',

@@ -9,12 +9,10 @@ const accountRequester = new Requester('Auth')
 export class Auth {
 
 	async login (email, password) {
-		await accountRequester.Post('Login', { email , password })
+		return await accountRequester.Post('Login', { email , password })
 		.then(response => {
 			this.saveToken(response.data)
 		})
-		.catch(error => { console.log(error.response.data.message) })
-		
 	}
 
 	saveToken (token) {

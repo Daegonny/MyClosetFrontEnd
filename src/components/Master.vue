@@ -45,7 +45,7 @@ export default {
 			{
 				title: "Home",
 				icon: "mdi-home-outline",
-				link: "/"
+				link: "/home"
 			},
 			{
 				title: "Meu Guarda-roupa",
