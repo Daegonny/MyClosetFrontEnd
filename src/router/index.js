@@ -3,21 +3,22 @@ import VueRouter from 'vue-router'
 import Login from '@/modules/login/views/Login'
 import Home from '@/modules/info/views/Home'
 import PieceManager from '@/modules/piece/views/PieceManager'
+import { AvailableRoutes } from '@/router/availableRoutes.js'
 Vue.use(VueRouter)
 
 const routes = [
 {
-	path: '/',
+	path: AvailableRoutes.Login,
 	name: 'login',
 	component: Login
 },
 {
-	path: '/home',
+	path: AvailableRoutes.Home,
 	name: 'home',
 	component: Home
 },
 {
-	path: '/piece/manager',
+	path: AvailableRoutes.PieceManager,
 	name: 'pieceManager',
 	component: PieceManager
 },

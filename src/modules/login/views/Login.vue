@@ -1,11 +1,14 @@
 <template>
-	<div class="d-flex flex-column justify-center h-100 px-7" style="height: 300px">
+	<div class="d-flex flex-column justify-space-between h-100">
+		<div class="d-flex justify-center pa-7">
+			<h1>MyCloset</h1>
+		</div>
+		<div class="d-flex flex-column justify-center h-100 px-7">
 			<div>
 				<v-text-field
-					ref="name"
+					ref="email"
 					label="Email"
-					v-model="name"
-					required>
+					v-model="email">
 				</v-text-field>
 			</div>
 			<div>
@@ -14,7 +17,7 @@
 					label="Senha"
 					type="password"
 					v-model="password"
-					required>
+					v-on:keyup.enter="login">
 				</v-text-field>
 			</div>
 			<div v-if="loginFailed">
@@ -47,6 +50,7 @@
 					Entrar <v-icon right dark> mdi-login </v-icon>
 				</v-btn>
 			</div>
+		</div>
 	</div>
 </template>
 
@@ -61,24 +65,22 @@ export default {
 			isLoading: false,
 			loginFailed: false,
 			loginFailedMessage: "",
-			name: "",
+			email: "",
 			password: "",
 		}
-	},
-	created: async function(){
-		AuthService.logout()
 	},
 	methods: {
 		async login () {
 			this.isLoading = true
 			this.loginFailed = false
-			await AuthService.login(this.name, this.password)
+			await AuthService.login(this.email, this.password)
 				.then(() => {
-					this.$router.push(AvailableRoutes.PieceManager)
+					this.$router.push(AvailableRoutes.Home)
 				})
 				.catch(error => {
 					this.loginFailedMessage = error.response.data.message
 					this.loginFailed = true
+					this.password = ""
 				})
 			this.isLoading = false
 		}

@@ -1,6 +1,5 @@
 import router from '@/router'
 import jwt_decode from 'jwt-decode'
-//import { ResponseCodes } from './responseCodes.js'
 import { Requester } from '@/http/requester.js'
 import { AvailableRoutes } from '@/router/availableRoutes.js'
 
@@ -20,13 +19,13 @@ export class Auth {
 	}
 
 	logout () {
-		this.removeRemoveToken()
+		this.removeToken()
 		if (router.currentRoute.path !== AvailableRoutes.Login) {
 			router.push(AvailableRoutes.Login)
 		}
 	}
 
-	removeRemoveToken () {
+	removeToken () {
 		sessionStorage.removeItem('token')
 	}
 
@@ -37,5 +36,9 @@ export class Auth {
 	getAccount () {
 		const token = this.getToken()
 		return token ? jwt_decode(token) : null
+	}
+
+	isUserLogged() {
+		return this.getAccount() != null
 	}
 }
