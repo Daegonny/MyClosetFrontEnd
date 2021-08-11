@@ -1,6 +1,7 @@
 <template>
 	<v-app id="inspire">
-		<v-navigation-drawer 
+		
+		<v-navigation-drawer v-if="showTopbar()"
 			disable-resize-watcher 
 			v-model="drawer" 
 			app 
@@ -8,7 +9,7 @@
 			temporary
 		>
 			<v-list dense>
-				<v-list-item v-for="path in paths" v-bind:key="path.link" link @click="nextPath = path.link">
+				<v-list-item v-for="path in paths" v-bind:key="path.link" link @click="navigate(path.link)">
 					<v-list-item-action>
 						<v-icon>{{path.icon}}</v-icon>
 					</v-list-item-action>
@@ -19,7 +20,7 @@
 			</v-list>
 		</v-navigation-drawer>
 
-		<v-app-bar app clipped-left>
+		<v-app-bar app clipped-left v-if="showTopbar()">
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title>MyCloset</v-toolbar-title>
 		</v-app-bar>
@@ -33,37 +34,48 @@
 
 <script>
 import Alerts from "@/modules/commons/components/Alerts"
+import { AvailableRoutes } from '@/router/availableRoutes.js'
+import { AuthService } from '@/auth'
+
 export default {
 	components: {
 		Alerts
 	},
 	data: () => ({
 		drawer: false,
-		currentPath: "/",
-		nextPath: "/",
+		isUserLogged: false,
 		paths: [
 			{
 				title: "Home",
 				icon: "mdi-home-outline",
-				link: "/"
+				link: AvailableRoutes.Home
 			},
 			{
 				title: "Meu Guarda-roupa",
 				icon: "mdi-wardrobe-outline",
-				link: "/piece/manager"
+				link: AvailableRoutes.PieceManager
+			},
+			{
+				title: "Sair",
+				icon: "mdi-logout",
+				link: AvailableRoutes.Login
 			}
 		]
 	}),
 	created () {
 		this.$vuetify.theme.dark = true
 	},
-	watch:{
-		nextPath: function(value){
-			if(this.currentPath != value){
-				this.currentPath = value;
-				this.$router.push(value);
-			}
+	methods:{
+		navigate(path){
+			if(path == AvailableRoutes.Login)
+				AuthService.logout()
+			if(this.$route.path != path)
+				this.$router.push(path);
+			this.drawer = false
+		},
+		showTopbar() {
+			return AuthService.isUserLogged()
 		}
-	}
+	},
 }
 </script>

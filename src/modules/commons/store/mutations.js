@@ -13,6 +13,9 @@ export default {
 	},
 	CLEAN_MESSAGES(state){
 		state.messages = state.messages.filter((c) => c.show)
+	},
+	SET_SHOW_TOPBAR(state, showTopbar){
+		state.showTopbar = showTopbar
 	}
 }
 

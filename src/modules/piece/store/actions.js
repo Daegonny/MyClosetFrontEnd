@@ -1,80 +1,57 @@
-import {http} from '@/utils/http.js'
 import PieceModel from '../models/PieceModel'
+import { Requester } from '@/http/requester.js'
+
+const pieceRequester = new Requester('Piece')
 
 export default {
 	saveFromFiles({commit}, {files, quantity}){
-		return new Promise((resolve, reject) => {
-			http.post('Piece/SaveFromFiles', files, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}})
-				.then(response => {
-					resolve(response.data)
-					commit("ADD_OK_MESSAGE", `${quantity} arquivo(s) adicionado(s)`)
-				})
-				.catch(err => {
-					reject(err)
-				})
+		return pieceRequester.Upload("SaveFromFiles", files)
+		.then(() => {
+			commit("ADD_OK_MESSAGE", `${quantity} arquivo(s) adicionado(s)`)
+		})
+		.catch( error => {
+			commit("ADD_ERROR_MESSAGE", error.response.data.message)
 		})
 	},
 
 	fetchPiecesFiltered({commit},{queryFilter, start, quantity}){
-		return new Promise((resolve, reject) => {
-			http.get(`/Piece/Filtered?start=${start}&quantity=${quantity}${queryFilter.queryString()}`)
-				.then(response => {
-					commit('ADD_PIECES', response.data.map(r => new PieceModel(r)))
-					resolve(response.data)
-				})
-				.catch(err => {
-					reject(err)
-				})
-		})
+		return pieceRequester.Get("Filtered",`?start=${start}&quantity=${quantity}${queryFilter.queryString()}`)
+			.then(response => {
+				commit('ADD_PIECES', response.data.map(r => new PieceModel(r)))
+			})
 	},
 
 	fetchPiecesFilteredRowCount({commit},{queryFilter}){
-		return new Promise((resolve, reject) => {
-			http.get(`/Piece/Filtered/RowCount?${queryFilter.queryString()}`)
-				.then(response => {
-					commit('SET_PIECES_FILTERED_ROW_COUNT', response.data)
-					resolve(response.data)
-				})
-				.catch(err => {
-					reject(err)
-				})
-		})
+		return pieceRequester.Get("Filtered/RowCount",`?${queryFilter.queryString()}`)
+			.then(response => {
+				commit('SET_PIECES_FILTERED_ROW_COUNT', response.data)
+			})
+			
 	},
 
 	saveCurrentPiece({state, commit}){
-		return new Promise((resolve, reject) => {
-			http.put(`/Piece`, state.currentPiece)
-				.then(response => {
-					resolve(response.data)
-					commit("ADD_OK_MESSAGE", "Peça salva com sucesso")
-				})
-				.catch(err => {
-					reject.error(err.data)
-					commit("ADD_ERROR_MESSAGE", "Falha ao salvar peça")
-				})
-		})
+		return pieceRequester.Put("", state.currentPiece)
+			.then(() => {
+				commit("ADD_OK_MESSAGE", "Peça salva com sucesso")
+			})
+			.catch( error => {
+				commit("ADD_ERROR_MESSAGE", error.response.data.message)
+			})
 	},
 
 	removePieces({commit, state, getters, dispatch}, pieceIds){
-		return new Promise((resolve, reject) => {
-			http.delete('/Piece/Multiple', {data: pieceIds})
-				.then(async response => {
-					for (const pieceId of pieceIds)
-						removePiece({commit, state}, pieceId)
-
-					await handleLastPage({getters, commit, dispatch}, pieceIds)
-					await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
-					commit("ADD_OK_MESSAGE", `${pieceIds.length} Peça(s) removida(s) com sucesso`)
-					resolve(response.data)
-				})
-				.catch(err => {
-					reject(err)
-					commit("ADD_ERROR_MESSAGE", `Falha ao remover peça(s)`)
-				})
-		});
+		return pieceRequester.Delete("Multiple", {data: pieceIds})
+			.then(async () => {
+				for (const pieceId of pieceIds)
+					removePiece({commit, state}, pieceId)
+	
+				await handleLastPage({getters, commit, dispatch}, pieceIds)
+				await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
+				commit("ADD_OK_MESSAGE", `${pieceIds.length} Peça(s) removida(s) com sucesso`)
+			})
+			.catch(error => {
+				commit("ADD_ERROR_MESSAGE", error.response.data.message)
+			})
 	}
 }
 
