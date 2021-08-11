@@ -1,5 +1,5 @@
 <template>
-	<div>
-		<h1>This is a home page</h1>
+	<div class="pa-5">
+		<h3>This is a home page</h3>
 	</div>
 </template>
