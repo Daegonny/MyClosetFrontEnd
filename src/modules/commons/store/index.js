@@ -3,8 +3,7 @@ import mutations from './mutations'
 
 export default{
 	state: () => ({
-		messages : [],
-		showTopbar: false
+		messages : []
 	}),
 	getters,
 	mutations

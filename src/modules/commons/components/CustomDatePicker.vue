@@ -34,7 +34,7 @@ export default {
 	data() {
 		return {
 			menuOpen: false,
-			dateValue: this.formatDateTime(this.$props.propDate)
+			dateValue: this.$props.propDate
 		}
 	},
 	watch:{
@@ -42,7 +42,7 @@ export default {
 			this.$emit('changed-date-value', value)
 		},
 		propDate: function(value){
-			this.dateValue = this.formatDateTime(value)
+			this.dateValue = value
 		}
 	},
 	created(){

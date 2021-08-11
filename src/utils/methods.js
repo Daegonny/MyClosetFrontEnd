@@ -80,6 +80,7 @@ function getFilePath(fullFilePath){
 }
 
 function dateTimeToDateString(dateTime){
+	console.log("methods", dateTime);
 	return dateTime != null && dateTime != undefined 
 		? dateTime.substring(0, 10)
 		: null;
