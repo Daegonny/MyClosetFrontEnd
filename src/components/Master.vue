@@ -67,10 +67,8 @@ export default {
 	},
 	methods:{
 		navigate(path){
-			if(path == AvailableRoutes.Login){
+			if(path == AvailableRoutes.Login)
 				AuthService.logout()
-				console.log("logout", AuthService.isUserLogged())
-			}
 			if(this.$route.path != path)
 				this.$router.push(path);
 			this.drawer = false
