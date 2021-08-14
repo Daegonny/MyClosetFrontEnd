@@ -7,6 +7,20 @@
 			</v-col>
 		</v-row>
 	</v-card>
+	<v-card v-else class="d-flex flex-column px-3 justify-center align-center">
+		<div v-if="getIsFilterApplied">
+			<center>
+				<h5>Nenhuma peça encontrada.</h5> 
+				<h5>Experimente realizar outro filtro!</h5>
+			</center>
+		</div>
+		<div v-else>
+			<center>
+				<h5>Você ainda não tem peças.</h5> 
+				<h5>Adicione novas peças para começar!</h5>
+			</center>
+		</div>
+	</v-card>
 </template>
 <script>
 import PieceCard from "@/modules/piece/components/PieceCard"
@@ -18,7 +32,10 @@ export default {
 	computed: {
 		getPieces () {
 			return this.$store.getters.getPieces
-		}
+		},
+		getIsFilterApplied() {
+			return this.$store.getters.getIsFilterApplied
+		},
 	}
 }
 </script>
