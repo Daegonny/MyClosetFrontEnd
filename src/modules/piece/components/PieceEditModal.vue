@@ -66,16 +66,25 @@
 						</v-btn>
 					</div>
 					<div>
-						<v-btn 
-						class="text-subtitle-2 text-none" 
-						small
-						block
-						:disabled="!canAct"
-						:loading="removeLoading"
-						@click="remove"
-						depressed color="error">
-							Remover <v-icon right dark> mdi-trash-can </v-icon>
-						</v-btn>
+						<ConfirmModal confirmMessage="removeSingle" @removeSingle="remove">
+							<template v-slot:title>
+								Remoção
+							</template>
+							<template v-slot:text>
+								Deseja remover as peças selecionadas?
+							</template>
+							<template v-slot:button>
+								<v-btn 
+								class="text-subtitle-2 text-none" 
+								small
+								block
+								:disabled="!canAct"
+								:loading="removeLoading"
+								depressed color="error">
+									Remover <v-icon right dark> mdi-trash-can </v-icon>
+								</v-btn>
+							</template>
+						</ConfirmModal>
 					</div>
 					<div>
 						<v-btn
@@ -104,12 +113,14 @@
 import CustomDatePicker from "@/modules/commons/components/CustomDatePicker"
 import PriceInput from "@/modules/commons/components/PriceInput"
 import TagSelect from "@/modules/tag/components/TagSelect"
+import ConfirmModal from '@/modules/commons/components/ConfirmModal.vue'
 import { getFilePath } from "@/utils/methods.js";
 
 export default {
 	components: {
 		CustomDatePicker,
 		PriceInput,
+		ConfirmModal,
 		TagSelect
 	},
 	data() {
