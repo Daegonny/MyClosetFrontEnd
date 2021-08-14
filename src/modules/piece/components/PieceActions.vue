@@ -2,16 +2,26 @@
 	<v-card class="pa-2">
 		<div class="d-flex flex-row justify-space-between">
 			<div>
-				<v-btn
-				class="text-subtitle-2 text-none" 
-				small
-				block
-				depressed color="error"
-				:loading="isLoadingRemove"
-				:disabled="!canRemove" 
-				@click="removeSelected">
-					Remover <v-icon right> mdi-trash-can </v-icon>
-				</v-btn>
+				<ConfirmModal confirmMessage="removeMultiple" @removeMultiple="removeSelected">
+					<template v-slot:title>
+						Remoção
+					</template>
+					<template v-slot:text>
+						Deseja remover as peças selecionadas?
+					</template>
+					<template v-slot:button>
+						<v-btn
+						class="text-subtitle-2 text-none" 
+						small
+						block
+						depressed color="error"
+						:loading="isLoadingRemove"
+						:disabled="!canRemove" 
+						>
+							Remover <v-icon right> mdi-trash-can </v-icon>
+						</v-btn>
+					</template>
+				</ConfirmModal>
 			</div>
 			<div class="ml-1">
 				<v-btn
@@ -41,7 +51,12 @@
 </template>
 
 <script>
+import ConfirmModal from '@/modules/commons/components/ConfirmModal.vue'
+
 export default {
+	components: {
+		ConfirmModal
+	},
 	data() {
 		return {
 			isLoadingRemove: false,

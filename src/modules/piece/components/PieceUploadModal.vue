@@ -1,8 +1,6 @@
 <template>
 	<v-dialog
 		v-model="dialog"
-		fullscreen
-		hide-overlay
 		center
 		persistent
 		no-click-animation
@@ -30,7 +28,7 @@
 						accept="image/*"
 						prepend-icon="mdi-camera"
 						v-model="inputFiles"
-						label="Selecione peças para importar!"
+						label="Selecione peças!"
 						:rules="inputFilesRules"
 						></v-file-input>
 					</form>

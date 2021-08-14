@@ -2,6 +2,7 @@ import router from '@/router'
 import { createRequest, createUploadRequest } from './helper.js'
 import { ResponseCodes } from './responseCodes.js'
 import { AvailableRoutes } from '@/router/availableRoutes.js'
+import { AuthService } from '@/auth'
 
 export class Requester {
 	
@@ -48,6 +49,7 @@ export class Requester {
 
 	redirectIfUnauthorized (status) {
 		if (status === ResponseCodes.Unauthorized && router.currentRoute.path !== AvailableRoutes.Login) {
+			AuthService.logout()
 			router.push(AvailableRoutes.Login)
 		}
 	}

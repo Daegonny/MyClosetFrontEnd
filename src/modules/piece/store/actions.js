@@ -6,8 +6,8 @@ const pieceRequester = new Requester('Piece')
 export default {
 	saveFromFiles({commit}, {files, quantity}){
 		return pieceRequester.Upload("SaveFromFiles", files)
-		.then(() => {
-			commit("ADD_OK_MESSAGE", `${quantity} arquivo(s) adicionado(s)`)
+		.then(response => {
+			commit("ADD_OK_MESSAGE", `${quantity} ${response.data}`)
 		})
 		.catch( error => {
 			commit("ADD_ERROR_MESSAGE", error.response.data.message)
@@ -31,8 +31,8 @@ export default {
 
 	saveCurrentPiece({state, commit}){
 		return pieceRequester.Put("", state.currentPiece)
-			.then(() => {
-				commit("ADD_OK_MESSAGE", "Peça salva com sucesso")
+			.then(response => {
+				commit("ADD_OK_MESSAGE", response.data)
 			})
 			.catch( error => {
 				commit("ADD_ERROR_MESSAGE", error.response.data.message)
@@ -41,13 +41,13 @@ export default {
 
 	removePieces({commit, state, getters, dispatch}, pieceIds){
 		return pieceRequester.Delete("Multiple", {data: pieceIds})
-			.then(async () => {
+			.then(async response => {
 				for (const pieceId of pieceIds)
 					removePiece({commit, state}, pieceId)
 	
 				await handleLastPage({getters, commit, dispatch}, pieceIds)
 				await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
-				commit("ADD_OK_MESSAGE", `${pieceIds.length} Peça(s) removida(s) com sucesso`)
+				commit("ADD_OK_MESSAGE", `${pieceIds.length} ${response.data}`)
 			})
 			.catch(error => {
 				commit("ADD_ERROR_MESSAGE", error.response.data.message)

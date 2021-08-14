@@ -26,14 +26,15 @@
 <script>
 import PieceFilterModel from "@/modules/piece/models/PieceFilterModel"
 export default {
-	data() {
-		return {
-			canFilter: true,
-		};
-	},
 	computed: {
 		getIsFilterApplied() {
 			return this.$store.getters.getIsFilterApplied
+		},
+		getPieces () {
+			return this.$store.getters.getPieces
+		},
+		canFilter() {
+			return true
 		}
 	},
 	methods: {

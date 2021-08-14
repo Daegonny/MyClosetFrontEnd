@@ -1,4 +1,3 @@
 export default {
-	getMessages: state => state.messages,
-	getShowTopbar: state => state.showTopbar
+	getMessages: state => state.messages
 }

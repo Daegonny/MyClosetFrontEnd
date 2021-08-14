@@ -29,7 +29,7 @@
 				</v-alert>
 			</div>
 			<div class="d-flex justify-end">
-				<a href="#">Esqueci minha senha</a>
+				<a href="#" @click="forgotPassword">Esqueci minha senha</a>
 			</div>
 			<div class="d-flex justify-end mt-7">
 				<v-btn 
@@ -83,6 +83,9 @@ export default {
 					this.password = ""
 				})
 			this.isLoading = false
+		},
+		forgotPassword () {
+			this.$store.commit("ADD_INFO_MESSAGE", "Funcionalidade ainda não implementada.")
 		}
 	}
 };
