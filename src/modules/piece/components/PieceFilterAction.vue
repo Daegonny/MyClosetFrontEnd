@@ -34,7 +34,7 @@ export default {
 			return this.$store.getters.getPieces
 		},
 		canFilter() {
-			return true //this.getPieces && this.getPieces.length > 0
+			return true
 		}
 	},
 	methods: {

@@ -5,7 +5,7 @@
 			:color="message.color" 
 			v-model="message.show"
 			:timeout="message.timeout"
-			centered
+			:centered="false"
 			>
 			<div class="d-flex flex-row justify-space-between">
 				<div v-html="message.text">
