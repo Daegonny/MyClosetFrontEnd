@@ -1,7 +1,7 @@
 <template>
 	<v-menu
 	v-model="menuOpen"
-	:close-on-content-click="true"
+	:close-on-content-click="false"
 	:nudge-right="40"
 	transition="scale-transition"
 	offset-y
