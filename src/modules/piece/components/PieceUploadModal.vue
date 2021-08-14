@@ -116,7 +116,7 @@ export default {
 		async upload() {
 			this.uploadLoading = true
 			this.fileChange(this.inputFiles)
-			await this.$store.dispatch("saveFromFiles", {files: this.files, quantity: this.inputFiles.length})
+			await this.$store.dispatch("saveFromFiles", this.files)
 			this.inputFiles = []
 			this.files = new FormData()
 			this.uploadLoading = false
