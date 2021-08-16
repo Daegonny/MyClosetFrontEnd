@@ -4,10 +4,10 @@ import { Requester } from '@/http/requester.js'
 const pieceRequester = new Requester('Piece')
 
 export default {
-	saveFromFiles({commit}, {files, quantity}){
+	saveFromFiles({commit}, files){
 		return pieceRequester.Upload("SaveFromFiles", files)
 		.then(response => {
-			commit("ADD_OK_MESSAGE", `${quantity} ${response.data}`)
+			commit("ADD_OK_MESSAGE", response.data)
 		})
 		.catch( error => {
 			commit("ADD_ERROR_MESSAGE", error.response.data.message)
@@ -47,7 +47,7 @@ export default {
 	
 				await handleLastPage({getters, commit, dispatch}, pieceIds)
 				await dispatch("fetchPiecesFilteredRowCount", {queryFilter: getters.getPieceFilter})
-				commit("ADD_OK_MESSAGE", `${pieceIds.length} ${response.data}`)
+				commit("ADD_OK_MESSAGE", response.data)
 			})
 			.catch(error => {
 				commit("ADD_ERROR_MESSAGE", error.response.data.message)

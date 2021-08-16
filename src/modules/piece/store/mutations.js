@@ -44,7 +44,11 @@ export default {
 
 	ITERATE_SELECTED_PIECE_INDEX(state, increment) {
 		const index = state.selectedPieces.indexOf(state.currentPiece)
-		state.currentPiece =  state.selectedPieces[(index + increment) % state.selectedPieces.length]
+		let nextIndex = index + increment
+		nextIndex = nextIndex < 0
+			? state.selectedPieces.length - 1
+			: nextIndex % state.selectedPieces.length
+		state.currentPiece =  state.selectedPieces[nextIndex]
 	},
 
 	SET_PIECES_FILTERED_ROW_COUNT(state, piecesFilteredRowCount) {

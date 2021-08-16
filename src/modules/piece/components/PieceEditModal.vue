@@ -71,7 +71,7 @@
 								Remoção
 							</template>
 							<template v-slot:text>
-								Deseja remover as peças selecionadas?
+								Deseja remover essa peça?
 							</template>
 							<template v-slot:button>
 								<v-btn 
