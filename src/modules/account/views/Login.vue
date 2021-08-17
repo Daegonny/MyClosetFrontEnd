@@ -36,13 +36,12 @@
 					class="text-subtitle-2 text-none mr-5" 
 					color="secondary"
 					depressed
-					disabled>
+					@click="$router.push(availableRoutes.Profile)">
 					Criar conta <v-icon right dark> mdi-account-plus </v-icon>
 				</v-btn>
 				<v-btn 
 					class="text-subtitle-2 text-none" 
-					color="primary"
-					
+					color="primary"	
 					depressed
 					:loading="isLoading"
 					:disabled="isLoading"
@@ -67,6 +66,11 @@ export default {
 			loginFailedMessage: "",
 			email: "",
 			password: "",
+		}
+	},
+	computed: {
+		availableRoutes () {
+			return AvailableRoutes
 		}
 	},
 	methods: {
