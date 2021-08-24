@@ -48,7 +48,15 @@
 					v-model="account.inviteKey"
 				/>
 			</div>
-			<div v-if="isUpdate" class="d-flex justify-end mt-7">
+			<div v-if="error">
+				<v-alert
+					dense
+					outlined
+					type="error">
+						{{ errorMessage }}
+				</v-alert>
+			</div>
+			<div v-if="isUpdate" class="d-flex justify-end mt-3">
 				<v-btn 
 					class="text-subtitle-2 text-none" 
 					color="success"
@@ -58,7 +66,7 @@
 					Salvar <v-icon right dark> mdi-floppy </v-icon>
 				</v-btn>
 			</div>
-			<div v-else class="d-flex justify-end mt-7">
+			<div v-else class="d-flex justify-end mt-3">
 				<v-btn 
 					class="text-subtitle-2 text-none mr-5" 
 					color="secondary"	
@@ -96,23 +104,51 @@ export default {
 				passwordConfirm: "",
 				inviteKey: "",
 			},
-			valid: false
+			valid: false,
+			error: false,
+			errorMessage: ""
 		}
 	},
 	created(){
 		if(this.isUpdate){
-			this.account.name = AuthService.getAccount().Name
-			this.account.email = AuthService.getAccount().Email
-			this.account.emailConfirm = AuthService.getAccount().Email
+			this.syncAccount()
 		}
 	},
 	methods: {
-		update() {
-			alert("salvou")
+		syncAccount(){
+			this.account.name = AuthService.getAccount().Name
+			this.account.email = AuthService.getAccount().Email
+			this.account.emailConfirm = AuthService.getAccount().Email
+		},
+		async update() {
+			this.error = false
+			this.isLoading = true
+			await this.$store.dispatch("updateAccount", this.account)
+				.then(response => {
+					this.$store.commit("ADD_OK_MESSAGE", response.data.message)
+					AuthService.saveToken(response.data.data)
+					this.syncAccount()
+				})
+				.catch(error => {
+					this.error = true
+					this.errorMessage = error.response.data.message
+				})
+			this.isLoading = false
 		},
 
-		create() {
-			alert("criou")
+		async create() {
+			this.error = false
+			this.isLoading = true
+			await this.$store.dispatch("createAccount", this.account)
+				.then(response => {
+					this.$store.commit("ADD_OK_MESSAGE", response.data)
+					this.$router.push(AvailableRoutes.Login)
+				})
+				.catch(error => {
+					this.error = true
+					this.errorMessage = error.response.data.message
+				})
+			this.isLoading = false
 		},
 	},
 	computed: {
