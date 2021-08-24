@@ -45,7 +45,7 @@
 				<v-text-field
 					ref="inviteKey"
 					label="Chave de convite"
-					v-model="account.inviteKey"
+					v-model="account.secretCode"
 				/>
 			</div>
 			<div v-if="error">
@@ -102,7 +102,7 @@ export default {
 				emailConfirm: "",
 				password: "",
 				passwordConfirm: "",
-				inviteKey: "",
+				secretCode: "",
 			},
 			valid: false,
 			error: false,
@@ -112,6 +112,11 @@ export default {
 	created(){
 		if(this.isUpdate){
 			this.syncAccount()
+		}
+		else{
+			console.log(this.$route.query.secret)
+			if(this.$route.query.secret)
+				this.account.secretCode = this.$route.query.secret
 		}
 	},
 	methods: {
