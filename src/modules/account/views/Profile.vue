@@ -114,7 +114,6 @@ export default {
 			this.syncAccount()
 		}
 		else{
-			console.log(this.$route.query.secret)
 			if(this.$route.query.secret)
 				this.account.secretCode = this.$route.query.secret
 		}
