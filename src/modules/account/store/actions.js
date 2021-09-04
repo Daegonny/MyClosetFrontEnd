@@ -8,7 +8,7 @@ export default {
 	async updateAccount(_, account){
 		return await accountRequester.Put("", account)
 	},
-	async checkAvailability(_, email){
+	async checkEmailAvailability(_, email){
 		return await accountRequester.Get("CheckAvailability", `?email=${email}`)
 	}
 }

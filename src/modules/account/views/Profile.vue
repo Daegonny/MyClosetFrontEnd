@@ -3,12 +3,14 @@
 		<div class="d-flex justify-center pa-7">
 			<h1>Perfil</h1>
 		</div>
-		<v-form model="valid" class="d-flex flex-column justify-center h-100 px-7">
+		<v-form ref="profileForm" v-model="valid" class="d-flex flex-column justify-center h-100 px-7">
 			<div>
 				<v-text-field
 					ref="name"
 					label="Nome"
 					v-model="account.name"
+					:rules="nameRules"
+					validate-on-blur
 				/>
 			</div>
 			<div>
@@ -16,6 +18,10 @@
 					ref="email"
 					label="Email"
 					v-model="account.email"
+					:rules="emailRules"
+					@blur="checkEmailAvailability"
+					:error-messages="emailErrorMessages"
+					validate-on-blur
 				/>
 			</div>
 			<div>
@@ -23,6 +29,8 @@
 					ref="emailConfirm"
 					label="Confirme email"
 					v-model="account.emailConfirm"
+					:rules="confirmEmailRules"
+					validate-on-blur
 				/>
 			</div>
 			<div>
@@ -31,6 +39,8 @@
 					label="Senha"
 					type="password"
 					v-model="account.password"
+					:rules="passwordRules"
+					validate-on-blur
 				/>
 			</div>
 			<div>
@@ -39,6 +49,8 @@
 					label="Confirme a senha"
 					type="password"
 					v-model="account.passwordConfirm"
+					:rules="confirmPasswordRules"
+					validate-on-blur
 				/>
 			</div>
 			<div v-if="!isUpdate">
@@ -46,6 +58,10 @@
 					ref="inviteKey"
 					label="Chave de convite"
 					v-model="account.secretCode"
+					:rules="secretCodeRules"
+					@blur="checkSecretCodeAvailability"
+					:error-messages="secretCodeErrorMessages"
+					validate-on-blur
 				/>
 			</div>
 			<div v-if="error">
@@ -57,8 +73,8 @@
 				</v-alert>
 			</div>
 			<div v-if="isUpdate" class="d-flex justify-end mt-3">
-				<v-btn 
-					class="text-subtitle-2 text-none" 
+				<v-btn
+					class="text-subtitle-2 text-none"
 					color="success"
 					depressed
 					:disabled="!allValid"
@@ -67,15 +83,15 @@
 				</v-btn>
 			</div>
 			<div v-else class="d-flex justify-end mt-3">
-				<v-btn 
-					class="text-subtitle-2 text-none mr-5" 
-					color="secondary"	
+				<v-btn
+					class="text-subtitle-2 text-none mr-5"
+					color="secondary"
 					depressed
 					@click="$router.push(availableRoutes.Login)">
 					Retornar ao Login <v-icon right dark> mdi-login </v-icon>
 				</v-btn>
-				<v-btn 
-					class="text-subtitle-2 text-none" 
+				<v-btn
+					class="text-subtitle-2 text-none"
 					color="success"
 					depressed
 					:disabled="!allValid"
@@ -94,7 +110,7 @@ import { AvailableRoutes } from '@/router/availableRoutes.js'
 
 export default {
 	data() {
-		return { 
+		return {
 			isLoading: false,
 			account: {
 				name: "",
@@ -106,7 +122,12 @@ export default {
 			},
 			valid: false,
 			error: false,
-			errorMessage: ""
+			errorMessage: "",
+			emailErrorMessages: [],
+			secretCodeErrorMessages: [],
+			staticRules: {
+				required: v => !!v || 'Campo obrigatório',
+			}
 		}
 	},
 	created(){
@@ -120,9 +141,9 @@ export default {
 	},
 	methods: {
 		syncAccount(){
-			this.account.name = AuthService.getAccount().Name
-			this.account.email = AuthService.getAccount().Email
-			this.account.emailConfirm = AuthService.getAccount().Email
+			this.account.name = AuthService.getAccount().name
+			this.account.email = AuthService.getAccount().email
+			this.account.emailConfirm = AuthService.getAccount().email
 		},
 		async update() {
 			this.error = false
@@ -154,6 +175,39 @@ export default {
 				})
 			this.isLoading = false
 		},
+
+		async checkEmailAvailability(){
+			if(this.isUpdate && AuthService.getAccount().email == this.account.email){
+				this.emailErrorMessages = []
+				return
+			}
+
+			this.isLoading = true
+			await this.$store.dispatch("checkEmailAvailability", this.account.email)
+				.then(() => {
+					this.emailErrorMessages = []
+				})
+				.catch(err => {
+					console.log("entrou no catch", err)
+					if(err && err.response && err.response.data)
+						this.emailErrorMessages = [err.response.data.message]
+				})
+
+			this.isLoading = false
+		},
+
+		async checkSecretCodeAvailability(){
+			this.isLoading = true
+			await this.$store.dispatch("checkSecretCodeAvailability", {code: this.account.secretCode, type: 0})
+				.then(() => {
+					this.secretCodeErrorMessages = []
+				})
+				.catch(err => {
+					if(err && err.response && err.response.data)
+						this.secretCodeErrorMessages = [err.response.data.message]
+				})
+			this.isLoading = false
+		},
 	},
 	computed: {
 		isUpdate () {
@@ -163,8 +217,49 @@ export default {
 			return AvailableRoutes
 		},
 		allValid () {
-			return true
-		}
+			return this.valid && !this.isLoading
+		},
+
+		nameRules() {
+			return [
+				this.staticRules.required,
+				() => this.account.name && this.account.name.length >= 2 || "Nome deve conter ao menos 2 caracteres"
+			]
+		},
+
+		emailRules() {
+			return [
+				this.staticRules.required,
+				() => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.account.email) || "Email deve ser válido",
+			]
+		},
+
+		confirmEmailRules() {
+			return [
+				this.staticRules.required,
+				() => this.account.email === this.account.emailConfirm || "Email de confirmação deve ser igual",
+			]
+		},
+
+		passwordRules() {
+			return [
+				this.staticRules.required,
+				() => this.account.password && this.account.password.length >= 6 || "Senha deve conter ao menos 6 caracteres",
+			]
+		},
+
+		confirmPasswordRules() {
+			return [
+				this.staticRules.required,
+				() => this.account.password === this.account.passwordConfirm || "Senha de confirmação deve ser igual",
+			]
+		},
+
+		secretCodeRules() {
+			return [
+				this.staticRules.required,
+			]
+		},
 	}
 };
 </script>

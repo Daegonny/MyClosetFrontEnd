@@ -1,8 +1,8 @@
 import { Requester } from '@/http/requester.js'
 
-const accountRequester = new Requester('SecretCode')
+const secretCodeRequester = new Requester('SecretCode')
 export default {
-	async checkAvailability(_, {code, type}){
-		return await accountRequester.Get("CheckAvailability", `?code=${code}&type=&${type}`)
+	async checkSecretCodeAvailability(_, {code, type}){
+		return await secretCodeRequester.Get("CheckAvailability", `?code=${code}&type=${type}`)
 	}
 }
