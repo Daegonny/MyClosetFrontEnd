@@ -1,10 +1,25 @@
 <template>
-	<v-card v-if="getPieces.length > 0" class="px-5 mt-5">
-		<v-row>
-			<v-col xs="12" sm="12" md="6" lg="4" xl="3" class="d-flex child-flex" v-for="piece in getPieces" :key="piece.id">
-				<piece-card :piece="piece" :removeAfterSave="removeAfterSave"/>	
+	<v-card v-if="getPieces.length > 0" class="px-3">
+		<v-row justify="start">
+			<v-col cols="4" class="pa-1"
+				v-for="(piece, index) in getPieces" :key="piece.id">
+					<PieceCard :index="index" :piece="piece" />	
 			</v-col>
 		</v-row>
+	</v-card>
+	<v-card v-else class="d-flex flex-column px-3 justify-center align-center">
+		<div v-if="getIsFilterApplied">
+			<center>
+				<h5>Nenhuma peça encontrada.</h5> 
+				<h5>Experimente realizar outro filtro!</h5>
+			</center>
+		</div>
+		<div v-else>
+			<center>
+				<h5>Você ainda não tem peças.</h5> 
+				<h5>Adicione novas peças para começar!</h5>
+			</center>
+		</div>
 	</v-card>
 </template>
 <script>
@@ -14,12 +29,13 @@ export default {
 		PieceCard,
 	},
 
-	props: ['removeAfterSave'],
-
 	computed: {
 		getPieces () {
 			return this.$store.getters.getPieces
-		}
+		},
+		getIsFilterApplied() {
+			return this.$store.getters.getIsFilterApplied
+		},
 	}
 }
 </script>

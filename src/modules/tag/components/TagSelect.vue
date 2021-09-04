@@ -2,17 +2,17 @@
 	<v-combobox
 	v-model="model"
 	multiple
-	hide-no-data
-	hide-selected
 	:search-input.sync="search"
+	hide-selected
 	clearable
-	chips
-	deletable-chips
-	item-text="name"
-	item-value="name"
+	allow-overflow
+	small-chips
 	label="Tags"
+	:delimiters="[',','.',' ']"
 	placeholder="Selecione tags relevantes"
-	></v-combobox>
+	hide-details
+	:return-object="false"
+	/>
 </template>
 
 <script>
@@ -25,7 +25,7 @@ export default {
 		}
 	},
 	created(){
-		this.model = this.propSelected ? [...this.propSelected.map(p => p.name)] : []
+		this.model = this.propSelected
 		this.$emit('changed-tags', this.tags)
 	},
 	computed : {
@@ -41,8 +41,11 @@ export default {
 			}	
 			this.search = value.clear()
 		},
-		model (){
+		model () {
 			this.$emit('changed-tags', this.tags)
+		},
+		propSelected (value) {
+			this.model = value	|| []
 		}
 	}
 };

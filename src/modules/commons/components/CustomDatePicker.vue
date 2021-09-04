@@ -1,7 +1,7 @@
 <template>
 	<v-menu
 	v-model="menuOpen"
-	:close-on-content-click="true"
+	:close-on-content-click="false"
 	:nudge-right="40"
 	transition="scale-transition"
 	offset-y
@@ -34,12 +34,15 @@ export default {
 	data() {
 		return {
 			menuOpen: false,
-			dateValue: this.formatDateTime(this.$props.propDate)
+			dateValue: this.$props.propDate
 		}
 	},
 	watch:{
 		dateValue: function(value){
 			this.$emit('changed-date-value', value)
+		},
+		propDate: function(value){
+			this.dateValue = value
 		}
 	},
 	created(){

@@ -4,7 +4,7 @@
 	v-bind:clearable="true"
 	v-bind:valueWhenIsEmpty="null"
 	v-bind:options="moneyOptions"
-	v-bind:background-color="color || '#333'"
+	v-bind:background-color="color || '#1e1e1e'"
 	v-bind:label="label"
 	/>
 </template>
@@ -25,13 +25,23 @@ export default {
 		}
 	},
 	watch:{
-		priceValue: function(value){
-			this.$emit('changed-price-value', value)
+		priceValue: function(){
+			this.$emit('changed-price-value', this.formatedPrice)
+		},
+		propPriceValue: function(value){
+			this.priceValue = value
 		}
 	},
 	created(){
 		this.priceValue = this.propPriceValue
-		this.$emit('changed-price-value', this.priceValue)
+	},
+	computed: {
+		formatedPrice (){
+			return this.isPriceValid ? parseFloat(this.priceValue) : null
+		},
+		isPriceValid  (){
+			return this.priceValue != undefined && this.priceValue != null
+		}
 	}
 };
 </script>
