@@ -56,6 +56,11 @@ export default {
 				link: AvailableRoutes.PieceManager
 			},
 			{
+				title: "Perfil",
+				icon: "mdi-account",
+				link: AvailableRoutes.Profile
+			},
+			{
 				title: "Sair",
 				icon: "mdi-logout",
 				link: AvailableRoutes.Login
