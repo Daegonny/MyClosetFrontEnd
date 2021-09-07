@@ -188,7 +188,6 @@ export default {
 					this.emailErrorMessages = []
 				})
 				.catch(err => {
-					console.log("entrou no catch", err)
 					if(err && err.response && err.response.data)
 						this.emailErrorMessages = [err.response.data.message]
 				})
