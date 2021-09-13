@@ -39,6 +39,10 @@ export class Auth {
 	}
 
 	isUserLogged() {
-		return this.getAccount() != null
+		try {
+			return this.getAccount() != null
+		} catch {
+			return false
+		}
 	}
 }
