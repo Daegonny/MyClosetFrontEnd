@@ -5,8 +5,9 @@ import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import store from './store'
 import vuetify from './plugins/vuetify';
-import "./plugins/vuetify-money.js" 
+import "./plugins/vuetify-money.js"
 import "@/assets/style/main.scss"
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 
