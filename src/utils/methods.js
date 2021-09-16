@@ -2,7 +2,7 @@ import { baseURL } from '@/http/helper.js'
 
 const charCleaner = {
 	' ':'',
-    'a':'a',
+	'a':'a',
 	'á':'a',
 	'à':'a',
 	'â':'a',
@@ -11,6 +11,7 @@ const charCleaner = {
 	'b':'b',
 	'c':'c',
 	'ç':'c',
+	'ĉ':'c',
 	'd':'d',
 	'e':'e',
 	'é':'e',
@@ -19,13 +20,16 @@ const charCleaner = {
 	'ë':'e',
 	'f':'f',
 	'g':'g',
+	'ĝ':'g',
 	'h':'h',
+	'ĥ':'h',
 	'i':'i',
 	'í':'i',
 	'ì':'i',
 	'î':'i',
 	'ï':'i',
 	'j':'j',
+	'ĵ':'j',
 	'k':'k',
 	'l':'l',
 	'm':'m',
@@ -41,12 +45,14 @@ const charCleaner = {
 	'q':'q',
 	'r':'r',
 	's':'s',
+	'ŝ':'s',
 	't':'t',
 	'u':'u',
 	'ú':'u',
 	'ù':'u',
 	'û':'u',
 	'ü':'u',
+	'ŭ':'u',
 	'v':'v',
 	'w':'w',
 	'x':'x',
@@ -61,8 +67,11 @@ const charCleaner = {
 	'6':'6',
 	'7':'7',
 	'8':'8',
-	'9':'9'
+	'9':'9',
+	'-':'-',
+	'_':'_'
 }
+
 Array.prototype.removeIf = function(callback) {
 	let index = 0;
 	while (index < this.length) {
@@ -108,7 +117,7 @@ String.prototype.clear = function () {
 }
 
 export {
-    getFilePath,
-    dateTimeToDateString,
-    fromBRMoneyToNumber
+	getFilePath,
+	dateTimeToDateString,
+	fromBRMoneyToNumber
 };
