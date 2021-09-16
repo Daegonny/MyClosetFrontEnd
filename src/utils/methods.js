@@ -85,7 +85,7 @@ Array.prototype.removeIf = function(callback) {
 }
 
 function getFilePath(fullFilePath){
-    return `${baseURL}File/${fullFilePath}`;
+	return `${baseURL}File/${fullFilePath}`;
 }
 
 function dateTimeToDateString(dateTime){

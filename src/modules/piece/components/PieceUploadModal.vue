@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import {resize} from "@/utils/imageProcessing.js";
 
 export default {
 	components: {
@@ -105,23 +106,24 @@ export default {
 			if(this.addedNewPieces)
 				this.$emit("addedNewPieces")
 		},
-		fileChange(fileList){
+		async fileChange(fileList){
 			if (fileList){
 				for (let index = 0; index < fileList.length; index++) {
-					this.files.append("files", fileList[index], fileList[index].name);   
+					const resizedImage = await resize(fileList[index]) 
+					this.files.append("files", resizedImage, fileList[index].name);  
 				}
 			}
 		},
 
 		async upload() {
 			this.uploadLoading = true
-			this.fileChange(this.inputFiles)
+			await this.fileChange(this.inputFiles)
 			await this.$store.dispatch("saveFromFiles", this.files)
 			this.inputFiles = []
 			this.files = new FormData()
 			this.uploadLoading = false
 			this.addedNewPieces = true
-		},
+		}
 	}
 };
 </script>
