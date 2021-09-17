@@ -91,7 +91,7 @@
 						class="text-subtitle-2 text-none"  
 						small
 						block
-						:disabled="!canAct"
+						:disabled="!canAct || !isValid"
 						:loading="saveLoading"
 						@click="save"
 						depressed color="success">
@@ -149,6 +149,9 @@ export default {
 		},
 		isSinglePieceSelected(){
 			return this.$store.getters.getSelectedPieces.length == 1
+		},
+		isValid() {
+			return !this.piece.tagNames || this.piece.tagNames.length <= 10	
 		}
 	},
 	methods: {
