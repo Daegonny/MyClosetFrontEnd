@@ -10,7 +10,7 @@
 	label="Tags"
 	:delimiters="[',','.',' ']"
 	placeholder="Selecione tags relevantes"
-	hide-details
+	:rules="rules"
 	:return-object="false"
 	/>
 </template>
@@ -32,7 +32,12 @@ export default {
 		tags(){
 			if (!this.model) return []
 			return this.model;
-		}
+		},
+		rules() {
+			return [
+				() => this.tags == null || this.tags.length <= 10 || "Tags está além do limite (10) permitido."
+			]
+		},
 	},
 	watch:{
 		search (value) {
@@ -48,5 +53,7 @@ export default {
 			this.model = value	|| []
 		}
 	}
+
+    
 };
 </script>
