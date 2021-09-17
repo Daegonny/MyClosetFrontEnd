@@ -108,6 +108,7 @@
 							small
 							block
 							depressed color="info"
+							:disabled="!isValid"
 							@click="search">
 								Filtrar <v-icon right dark> mdi-filter </v-icon>
 							</v-btn>
@@ -151,6 +152,9 @@ export default {
 		},
 		getIsFilterApplied() {
 			return this.$store.getters.getIsFilterApplied
+		},
+		isValid(){
+			return !this.pieceFilter.tagNames || this.pieceFilter.tagNames.length <= 10	
 		}
 	},
 	methods: {

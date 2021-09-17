@@ -45,11 +45,11 @@ export default {
 		drawer: false,
 		isUserLogged: false,
 		paths: [
-			{
-				title: "Home",
-				icon: "mdi-home-outline",
-				link: AvailableRoutes.Home
-			},
+			// {
+			// 	title: "Principal",
+			// 	icon: "mdi-home-outline",
+			// 	link: AvailableRoutes.Home
+			// },
 			{
 				title: "Meu Guarda-roupa",
 				icon: "mdi-wardrobe-outline",

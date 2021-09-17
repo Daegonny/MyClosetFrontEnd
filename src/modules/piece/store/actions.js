@@ -19,6 +19,9 @@ export default {
 			.then(response => {
 				commit('ADD_PIECES', response.data.map(r => new PieceModel(r)))
 			})
+			.catch( error => {
+				commit("ADD_ERROR_MESSAGE", error.response.data.message)
+			})
 	},
 
 	fetchPiecesFilteredRowCount({commit},{queryFilter}){

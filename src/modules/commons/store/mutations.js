@@ -13,7 +13,7 @@ export default {
 	},
 	ADD_ERROR_MESSAGE(state, message){
 		if(isMessageValid(message))
-			state.messages.push(createMessage(message, "error"))
+			state.messages.push(createMessage(message, "error", 5000))
 	},
 	CLEAN_MESSAGES(state){
 		state.messages = state.messages.filter((c) => c.show)
@@ -24,11 +24,11 @@ function isMessageValid(message){
 	return message != null && message.trim().length > 0
 }
 
-function createMessage(message, color) {
+function createMessage(message, color, timeout = 1000) {
 	return {
 		text: message,
 		color: color,
-		timeout: 1000,
+		timeout: timeout,
 		show: true
 	}
 }

@@ -68,6 +68,10 @@ export default {
 			password: "",
 		}
 	},
+	created (){
+		if(AuthService.isUserLogged())
+			this.$router.push(AvailableRoutes.PieceManager)
+	},
 	computed: {
 		availableRoutes () {
 			return AvailableRoutes
@@ -79,7 +83,7 @@ export default {
 			this.loginFailed = false
 			await AuthService.login(this.email, this.password)
 				.then(() => {
-					this.$router.push(AvailableRoutes.Home)
+					this.$router.push(AvailableRoutes.PieceManager)
 				})
 				.catch(error => {
 					this.loginFailedMessage = error.response.data.message
