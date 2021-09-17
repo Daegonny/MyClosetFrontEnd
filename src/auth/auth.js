@@ -15,7 +15,7 @@ export class Auth {
 	}
 
 	saveToken (token) {
-		sessionStorage.setItem('token', token)
+		localStorage.setItem('token', token)
 	}
 
 	logout () {
@@ -26,11 +26,11 @@ export class Auth {
 	}
 
 	removeToken () {
-		sessionStorage.removeItem('token')
+		localStorage.removeItem('token')
 	}
 
 	getToken() {
-		return sessionStorage.getItem('token')
+		return localStorage.getItem('token')
 	}
 
 	getAccount () {
