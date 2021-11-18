@@ -3,14 +3,12 @@ async function resize(input){
 	const image = document.createElement("img");
 	image.src = URL.createObjectURL(input);
 	const {height, width} = await getImageDimensions(image)
-	const MAX_WIDTH = 300; //TODO: RECEBER DO BACKEND
-	const MAX_HEIGHT = 300; 
-	const widthRatioBlob = await compressImage(image, MAX_WIDTH / width, width, height); 
-	const heightRatioBlob = await compressImage(image, MAX_HEIGHT / height, width, height);
-
-	const compressedBlob = widthRatioBlob.size > heightRatioBlob.size ? heightRatioBlob : widthRatioBlob;
-	const optimalBlob = compressedBlob.size < input.size ? compressedBlob : input;
-	return optimalBlob;
+	const MAX_WIDTH = 800; //TODO: RECEBER DO BACKEND
+	const MAX_HEIGHT = 800;
+	const blob = height > width
+		? await compressImage(image, MAX_HEIGHT / height, width, height)
+		: await compressImage(image, MAX_WIDTH / width, width, height);
+	return blob
 }
 
 function compressImage(image, scale, initalWidth, initalHeight){
